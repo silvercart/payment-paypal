@@ -2,6 +2,6 @@
 /**
  * Bearbeitungsgebuehren fuer Paypal Zahlungen
  */
-class HandlingCostPrepayment extends HandlingCost {
+class HandlingCostPaypal extends HandlingCost {
     
 }
