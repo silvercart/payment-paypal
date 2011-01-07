@@ -308,8 +308,6 @@ class PaymentPaypal extends PaymentMethod {
      * @since 16.11.2010
      */
     public function processPaymentBeforeOrder() {
-        parent::processPaymentBeforeOrder();
-
         $token = $this->fetchPaypalToken();
 
         if (!$this->errorOccured) {
@@ -344,8 +342,6 @@ class PaymentPaypal extends PaymentMethod {
      * @since 19.11.2010
      */
     public function processReturnJumpFromPaymentProvider() {
-        parent::processReturnJumpFromPaymentProvider();
-
         if (!isset($_REQUEST['token'])) {
             $this->log('processReturnJumpFromPaymentProvider', var_export($_REQUEST, true));
             $this->errorOccured = true;
@@ -407,25 +403,19 @@ class PaymentPaypal extends PaymentMethod {
      */
     public function doExpressCheckoutPayment($orderObj) {
         // Rundungsdifferenzen beseitigen
-        $cartAmountGross = round((float) $orderObj->getAmountGross(), 2);
-        $cartAmountNet   = round((float) $orderObj->getAmountNet(), 2);
-        $itemAmountGross = round((float) $orderObj->getPriceGross(), 2);
-        $itemAmountNet   = round((float) $orderObj->getPriceNet(), 2);
-        $shippingAmt     = round((float) $orderObj->getShippingCosts(), 2);
-        $handlingAmt     = round((float) $orderObj->getHandlingCosts(), 2);
-        $taxAmt          = round((float) $orderObj->getTax(), 2);
-        $total           = $itemAmountNet + $taxAmt + $shippingAmt + $handlingAmt;
-
-        if ($total < $cartAmountGross) {
-            $difference  = $cartAmountGross - $total;
-            $total      += $difference;
-        }
+        $cartAmountGross = round((float) $orderObj->getAmountGross()->getAmount(), 2);
+        $cartAmountNet   = round((float) $orderObj->getAmountNet()->getAmount(), 2);
+        $itemAmountGross = round((float) $orderObj->getPriceGross()->getAmount(), 2);
+        $itemAmountNet   = round((float) $orderObj->getPriceNet()->getAmount(), 2);
+        $shippingAmt     = round((float) $orderObj->getShippingCosts()->getAmount(), 2);
+        $handlingAmt     = round((float) $orderObj->getHandlingCosts()->getAmount(), 2);
+        $taxAmt          = round((float) $orderObj->getTax()->getAmount(), 2);
 
         $this->Log(
             'doExpressCheckoutPayment: Amounts',
-            '  warenkorb_summe_brutto: '.$total.
+            '  warenkorb_summe_brutto: '.$cartAmountGross.
             ', warenkorb summe netto: '.$cartAmountNet.
-            ', itemamt: '.$itemAmountGross.
+            ', itemamt: '.$itemAmountNet.
             ', shippingamt: '.$shippingAmt.
             ', handlingamt: '.$handlingAmt.
             ', taxamt: '.$taxAmt
