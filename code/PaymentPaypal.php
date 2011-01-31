@@ -181,7 +181,7 @@ class PaymentPaypal extends PaymentMethod {
      * @copyright 2010 pixeltricks GmbH
      * @since 12.11.2010
      */
-    public function getCMSFields_forPopup($params = null) {
+    public function getCMSFields($params = null) {
         $fields         = parent::getCMSFields_forPopup($params);
         $fieldLabels    = self::$field_labels;
 
