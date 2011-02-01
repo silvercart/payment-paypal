@@ -898,8 +898,7 @@ class PaymentPaypal extends PaymentMethod {
             $_SESSION['curl_error_no']  = curl_errno($ch) ;
             $_SESSION['curl_error_msg'] = curl_error($ch);
             $this->log('hash_call', 'curl_errno: '.curl_errno($ch).', curl_error_msg: '.curl_error($ch));
-            print "FEHLER!<br />";
-            exit();
+            return false;
         } else {
             //closing the curl
             curl_close($ch);
