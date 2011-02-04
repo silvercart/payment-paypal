@@ -407,8 +407,8 @@ class PaymentPaypal extends PaymentMethod {
         $cartAmountNet   = round((float) $orderObj->getAmountNet()->getAmount(), 2);
         $itemAmountGross = round((float) $orderObj->getPriceGross()->getAmount(), 2);
         $itemAmountNet   = round((float) $orderObj->getPriceNet()->getAmount(), 2);
-        $shippingAmt     = round((float) $orderObj->getShippingCosts()->getAmount(), 2);
-        $handlingAmt     = round((float) $orderObj->getHandlingCosts()->getAmount(), 2);
+        $shippingAmt     = round((float) $orderObj->HandlingCostShipment()->getAmount(), 2);
+        $handlingAmt     = round((float) $orderObj->HandlingCostPayment()->getAmount(), 2);
         $taxAmt          = round((float) $orderObj->getTax()->getAmount(), 2);
 
         $this->Log(
