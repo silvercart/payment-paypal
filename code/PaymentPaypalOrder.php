@@ -8,7 +8,7 @@
  * @since 24.11.2010
  * @license none
  */
-class PaymentPaypalOrder extends DataObject {
+class SilvercartPaymentPaypalOrder extends DataObject {
 
     /**
      * Definiert die Attribute der Klasse.

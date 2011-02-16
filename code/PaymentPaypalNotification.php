@@ -10,7 +10,7 @@
  * @since 23.11.2010
  * @license none
  */
-class PaymentPaypalNotification extends DataObject {
+class SilvercartPaymentPaypalNotification extends DataObject {
     
     /**
      * Enthaelt den Modulname.
@@ -37,7 +37,7 @@ class PaymentPaypalNotification extends DataObject {
 
         // Zahlungsmodul laden
         $paypalModule = DataObject::get_one(
-            'Payment',
+            'SilvercartPayment',
             sprintf(
                 "`Name` = '%s'",
                 $this->moduleName
@@ -49,8 +49,8 @@ class PaymentPaypalNotification extends DataObject {
             // ----------------------------------------------------------------------------
             // Ueberpruefen, ob das Shared Secret korrekt uebergeben wurde.
             if ($paypalModule->validateSharedSecret() === false) {
-                $paypalModule->Log('PaymentPaypalNotification', 'Falsches Shared Secret gesendet! Abbruch.');
-                $paypalModule->Log('PaymentPaypalNotification', var_export($_REQUEST, true));
+                $paypalModule->Log('SilvercartPaymentPaypalNotification', 'Falsches Shared Secret gesendet! Abbruch.');
+                $paypalModule->Log('SilvercartPaymentPaypalNotification', var_export($_REQUEST, true));
                 exit();
             }
 
@@ -63,14 +63,14 @@ class PaymentPaypalNotification extends DataObject {
                 $ipnVariables       = $paypalModule->getIpnRequestVariables();
                 $customVariables    = $paypalModule->getIpnCustomVariables();
 
-                $paypalModule->Log('PaymentPaypalNotification', 'Postback-Pruefung: Zahlungsbestaetigung kam von Paypal.');
+                $paypalModule->Log('SilvercartPaymentPaypalNotification', 'Postback-Pruefung: Zahlungsbestaetigung kam von Paypal.');
 
                 // Wenn die Bestellung bezahlt ist, dann den Status in der Stamm-
                 // bestelltabelle umstellen auf "Bezahlt".
                 // Ausserdem wird die Lieferadresse angepasst, wenn die entsprechenden
                 // Daten geliefert wurden
                 $orderObj = DataObject::get_by_id(
-                    'Order',
+                    'SilvercartOrder',
                     $customVariables['order_id']
                 );
 
@@ -89,7 +89,7 @@ class PaymentPaypalNotification extends DataObject {
 
                 // Bestellmodul der Zahlungsart laden
                 $paymentPaypalOrder = DataObject::get_one(
-                    'PaymentPaypalOrder',
+                    'SilvercartPaymentPaypalOrder',
                     sprintf(
                         "\"orderId\" = '%d'",
                         $customVariables['order_id']
@@ -104,10 +104,10 @@ class PaymentPaypalNotification extends DataObject {
                         $ipnVariables
                     );
                 } else {
-                    $paypalModule->Log('PaymentPaypalNotification', 'Das PaymentPaypalOrder Objekt konnte nicht geladen werden für die orderId '.$customVariables['order_id']);
+                    $paypalModule->Log('SilvercartPaymentPaypalNotification', 'Das PaymentPaypalOrder Objekt konnte nicht geladen werden für die orderId '.$customVariables['order_id']);
                 }
             } else {
-                $paypalModule->Log('PaymentPaypalNotification', 'Kein valider IPN-Call; Requestvariablen: '.var_export($_REQUEST, true));
+                $paypalModule->Log('SilvercartPaymentPaypalNotification', 'Kein valider IPN-Call; Requestvariablen: '.var_export($_REQUEST, true));
             }
         }
     }

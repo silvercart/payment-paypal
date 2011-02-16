@@ -8,7 +8,7 @@
  * @since 09.11.2010
  * @license none
  */
-class PaymentPaypal extends PaymentMethod {
+class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
 
     /**
      * Definition der Datenbankfelder.
@@ -82,7 +82,7 @@ class PaymentPaypal extends PaymentMethod {
      * @since 24.11.2010
      */
     public static $has_one = array(
-        'HandlingCost' => 'HandlingCostPaypal'
+        'SilvercartHandlingCost' => 'SilvercartHandlingCostPaypal'
     );
 
     /**
