@@ -59,9 +59,9 @@ class SilvercartPaymentPaypalOrder extends DataObject {
     /**
      * Aktualisiert eine Bestellung.
      *
-     * @param int   $orderID  Die ID der Bestellung
-     * @param int   $payerId  Die Paypal PayerId
-     * @param array $data Ein assoziatives Array mit Daten zur Bestellung
+     * @param int   $orderId Die ID der Bestellung
+     * @param int   $payerId Die Paypal PayerId
+     * @param array $data    Ein assoziatives Array mit Daten zur Bestellung
      *
      * @return void
      *

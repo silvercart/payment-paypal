@@ -260,7 +260,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         );
 
         // Bestellstatus Tab Felder -------------------------------------------
-        $OrderStatus = DataObject::get('OrderStatus');
+        $OrderStatus = DataObject::get('SilvercartOrderStatus');
         $tabOrderStatus->setChildren(
             new FieldSet(
                 new DropdownField('PaidOrderStatus',     $fieldLabels['PaidOrderStatus'],     $OrderStatus->map('ID', 'Title'), $this->PaidOrderStatus),
@@ -471,18 +471,18 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         if (isset($response['PAYMENTSTATUS'])) {
             // Den Bestellstatus an die Rueckmeldung anpassen
             if (in_array($response['PAYMENTSTATUS'], $this->successPaypalStatus)) {
-                $orderObj->setOrderStatus(DataObject::get_by_id('OrderStatus', $this->PaidOrderStatus));
+                $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $this->PaidOrderStatus));
             } else if (in_array($response['PAYMENTSTATUS'], $this->failedPaypalStatus)) {
-                $orderObj->setOrderStatus(DataObject::get_by_id('OrderStatus', $this->CanceledOrderStatus));
+                $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $this->CanceledOrderStatus));
             } else if (in_array($response['PAYMENTSTATUS'], $this->pendingPaypalStatus)) {
-                $orderObj->setOrderStatus(DataObject::get_by_id('OrderStatus', $this->PendingOrderStatus));
+                $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $this->PendingOrderStatus));
             } else if (in_array($response['PAYMENTSTATUS'], $this->refundedPaypalStatus)) {
-                $orderObj->setOrderStatus(DataObject::get_by_id('OrderStatus', $this->RefundedOrderStatus));
+                $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $this->RefundedOrderStatus));
             } else {
-                $orderObj->setOrderStatus(DataObject::get_by_id('OrderStatus', $this->CanceledOrderStatus));
+                $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $this->CanceledOrderStatus));
             }
         } else {
-            $orderObj->setOrderStatus(DataObject::get_by_id('OrderStatus', $this->CanceledOrderStatus));
+            $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $this->CanceledOrderStatus));
         }
 
         $this->Log('doExpressCheckoutPayment: Got Response', var_export($response, true));
