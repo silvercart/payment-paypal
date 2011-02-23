@@ -407,8 +407,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $cartAmountNet   = round((float) $orderObj->getAmountNet()->getAmount(), 2);
         $itemAmountGross = round((float) $orderObj->getPriceGross()->getAmount(), 2);
         $itemAmountNet   = round((float) $orderObj->getPriceNet()->getAmount(), 2);
-        $shippingAmt     = round((float) $orderObj->HandlingCostShipment()->getAmount(), 2);
-        $handlingAmt     = round((float) $orderObj->HandlingCostPayment()->getAmount(), 2);
+        $shippingAmt     = round((float) $orderObj->HandlingCostShipmentAmount, 2);
+        $handlingAmt     = round((float) $orderObj->HandlingCostPaymentAmount, 2);
         $taxAmt          = round((float) $orderObj->getTax()->getAmount(), 2);
 
         $this->Log(
@@ -461,7 +461,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         }
         
         // Paypal-Bestellung anlegen
-        $paypalOrder = new PaymentPaypalOrder();
+        $paypalOrder = new SilvercartPaymentPaypalOrder();
         $paypalOrder->updateOrder(
             $orderObj->ID,
             $this->getPayerId(),
