@@ -1,17 +1,36 @@
 <?php
+/*
+ * Copyright 2010, 2011 pixeltricks GmbH
+ *
+ * This file is part of SilvercartPaypalPayment.
+ *
+ * SilvercartPaypalPayment is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * SilvercartPaypalPayment is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SilvercartPaypalPayment.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
- * Zusatzinformationen fuer Bestellungen ueber Paypal
+ * additional information for orders via paypal
  *
  * @package fashionbids
  * @author Sascha Koehler <skoehler@pixeltricks.de>
  * @copyright 2010 pixeltricks GmbH
  * @since 24.11.2010
- * @license none
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  */
 class SilvercartPaymentPaypalOrder extends DataObject {
 
     /**
-     * Definiert die Attribute der Klasse.
+     * attribute definition
      *
      * @author Sascha Koehler <skoehler@pixeltricks.de>
      * @copyright 2010 pixeltricks GmbH
@@ -44,7 +63,7 @@ class SilvercartPaymentPaypalOrder extends DataObject {
     );
 
     /**
-     * Extensions fuer dieses DataObject registrieren.
+     * register extensions for $this
      *
      * @var array
      *
@@ -57,11 +76,11 @@ class SilvercartPaymentPaypalOrder extends DataObject {
     );
 
     /**
-     * Aktualisiert eine Bestellung.
+     * update an order
      *
-     * @param int   $orderId Die ID der Bestellung
-     * @param int   $payerId Die Paypal PayerId
-     * @param array $data    Ein assoziatives Array mit Daten zur Bestellung
+     * @param int   $orderId orders ID
+     * @param int   $payerId Paypal PayerId
+     * @param array $data    array with order data
      *
      * @return void
      *

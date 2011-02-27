@@ -1,17 +1,35 @@
 <?php
-/**
- * Paypal Zahlungsmodul
+/*
+ * Copyright 2010, 2011 pixeltricks GmbH
  *
- * @package fashionbids
+ * This file is part of SilvercartPaypalPayment.
+ *
+ * SilvercartPaypalPayment is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * SilvercartPaypalPayment is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SilvercartPaypalPayment.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Paypal payment modul
+ *
  * @author Sascha Koehler <skoehler@pixeltricks.de>
  * @copyright 2010 pixeltricks GmbH
  * @since 09.11.2010
- * @license none
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  */
 class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
 
     /**
-     * Definition der Datenbankfelder.
+     * db field definitions
      *
      * @var array
      *
@@ -43,7 +61,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     );
 
     /**
-     * Definition der Labels fuer die Datenbankfelder.
+     * label definitions for class attributes
      *
      * @var array
      *
@@ -75,7 +93,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     );
 
     /**
-     * Definiert die 1:1 Beziehungen der Klasse.
+     * define 1:1 relations
      *
      * @author Sascha Koehler <skoehler@pixeltricks.de>
      * @copyright 2010 pixeltricks GmbH
@@ -86,7 +104,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     );
 
     /**
-     * Enthaelt den Modulname zur Anzeige in der Adminoberflaeche.
+     * contains module name for display in the admin backend
      *
      * @var string
      *
@@ -97,8 +115,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     protected $moduleName = 'Paypal';
 
     /**
-     * Enthaelt den Namen fuer die SharedSecret-Kennung. Diese wird von Paypal
-     * bei den IPN-Rueckmeldungen genutzt.
+     * contains name for the shared secret ID; Used by paypal at the IPN answer
      *
      * @var string
      *
@@ -109,8 +126,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     protected $sharedSecretVariableName = 'sh';
 
     /**
-     * Enthaelt alle Rueckmeldungsstrings von Paypal, die den Status der
-     * Transaktion fuer gescheitert erklaeren.
+     * contains all strings of the paypal answer which declare the transaction status false
      *
      * @var array
      *
@@ -126,8 +142,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     );
 
     /**
-     * Enthaelt alle Rueckmeldungsstrings von Paypal, die den Status der
-     * Transaktion fuer erfolgreich erklaeren.
+     * contains all strings of the paypal answer which declare the transaction status true
      *
      * @var array
      *
@@ -142,8 +157,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     );
 
     /**
-     * Enthaelt alle Rueckmeldungsstrings von Paypal, die anzeigen, dass die
-     * Zahlung zurueckgezogen wird.
+     * contains all strings of the paypal answer of a withdrawn payment
      *
      * @var array
      *
@@ -157,8 +171,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     );
 
     /**
-     * Enthaelt alle Rueckmeldungsstrings von Paypal, die anzeigen, dass die
-     * Transaktion in der Schwebe ist.
+     * contains all strings of the paypal answer which declare the transaction status pending
      *
      * @var array
      *
@@ -171,9 +184,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     );
 
     /**
-     * Liefert die Eingabefelder zum Bearbeiten des Datensatzes.
+     * returns CMS fields
      *
-     * @param mixed $params Optionale Parameter
+     * @param mixed $params optional
      *
      * @return FieldSet
      *
@@ -193,7 +206,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $fields->fieldByName('Sections')->push($tabUrls);
         $fields->fieldByName('Sections')->push($tabOrderStatus);
 
-        // Grundeinstellungen -------------------------------------------------
+        // basic settings -------------------------------------------------
         $fields->addFieldToTab(
             'Sections.Basic',
             new TextField('paypalSharedSecret', $fieldLabels['paypalSharedSecret'])
@@ -221,7 +234,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
 
         $tabUrls->push($tabUrlTabset);
 
-        // API Tab Dev Felder -------------------------------------------------
+        // API Tab Dev fields -------------------------------------------------
         $tabApiTabDev->setChildren(
             new FieldSet(
                 new TextField('paypalApiUsername_Dev',     $fieldLabels['paypalApiUsername_Dev']),
@@ -231,7 +244,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             )
         );
 
-        // API Tab Live Felder ------------------------------------------------
+        // API Tab Live fields ------------------------------------------------
         $tabApiTabLive->setChildren(
             new FieldSet(
                 new TextField('paypalApiUsername_Live',   $fieldLabels['paypalApiUsername_Live']),
@@ -241,7 +254,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             )
         );
 
-        // URL Tab Dev Felder -------------------------------------------------
+        // URL Tab Dev fields -------------------------------------------------
         $tabUrlTabDev->setChildren(
             new FieldSet(
                 new TextField('paypalCheckoutUrl_Dev',             $fieldLabels['paypalCheckoutUrl_Dev']),
@@ -250,7 +263,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             )
         );
 
-        // URL Tab Live Felder ------------------------------------------------
+        // URL Tab Live fields ------------------------------------------------
         $tabUrlTabLive->setChildren(
             new FieldSet(
                 new TextField('paypalCheckoutUrl_Live',            $fieldLabels['paypalCheckoutUrl_Live']),
@@ -259,7 +272,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             )
         );
 
-        // Bestellstatus Tab Felder -------------------------------------------
+        // Bestellstatus Tab fields -------------------------------------------
         $OrderStatus = DataObject::get('SilvercartOrderStatus');
         $tabOrderStatus->setChildren(
             new FieldSet(
@@ -274,15 +287,13 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     // ------------------------------------------------------------------------
-    // Verarbeitungsmethoden
+    // processing methods
     // ------------------------------------------------------------------------
     
     /**
-     * Bietet die Moeglichkeit, Code nach dem Anlegen der Bestellung
-     * auszufuehren.
+     * hook to be called after order creation
      *
-     * @param Order $orderObj Das Order-Objekt, mit dessen Daten die Abwicklung
-     * erfolgen soll.
+     * @param Order $orderObj object to be processed
      *
      * @return void
      *
@@ -295,11 +306,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
-     * Bietet die Moeglichkeit, Code vor dem Anlegen der Bestellung
-     * auszufuehren.
+     * hook to be called before order creation
      *
-     * Holt sich das Paypal-Token und speichert es in der Session.
-     * Anschliessend wird zum Checkout auf Paypal weitergeleitet.
+     * saves the paypal token to the session; after that redirects to paypal checkout
      *
      * @return void
      *
@@ -326,14 +335,11 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
     
     /**
-     * Bietet die Moeglichkeit, Code nach dem Ruecksprung vom Payment
-     * Provider auszufuehren.
-     * Diese Methode wird vor dem Anlegen der Bestellung durchgefuehrt.
+     * hook to be called after jumpback from payment provider; called before
+     * order creation
      *
-     * Von Paypal wird in diesem Schritt die PayerId gesendet, die wir hier
-     * in der Session speichern.
-     * Anschliessend wird zum naechsten Schritt der Checkoutreihe
-     * weitergeleitet.
+     * paypal sends the PayerID during this step which will be saved to the session
+     * after that redirect to the next step of the checkout
      *
      * @return void
      *
@@ -362,11 +368,11 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     // -----------------------------------------------------------------------
-    // Methoden, die nur fuer das Paypal-Modul von Belang sind.
+    // methods which concern the paypal modul only
     // -----------------------------------------------------------------------
 
     /**
-     * Holt die Zahlungs- und Versandinformationen von Paypal.
+     * returns payment and shipping information from paypal
      * 
      * @return void
      *
@@ -390,10 +396,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
-     * Bestaetigung und Abwicklung der Zahlung.
+     * payment confirmation
      * 
-     * @param Order $orderObj Das Order-Objekt, mit dessen Daten die Abwicklung
-     * erfolgen soll.
+     * @param Order $orderObj order object to be processed
      *
      * @return boolean
      *
@@ -421,17 +426,20 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             ', taxamt: '.$taxAmt
         );
 
+        // required fields
         // Pflichtparameter:
         $parameters = array(
             'TOKEN'         => $this->getPaypalToken(),
             'PAYERID'       => $this->getPayerId(),
             'PAYMENTACTION' => 'Sale',
-            'AMT'           => $cartAmountGross, // Gesamtbetrag der Bestellung inklusive Versandkosten und Steuern
+            'AMT'           => $cartAmountGross, // total amount + shipping + tax
+            //information for the total amount
+            //
             // Informationen zum Gesamtbetrag:
-            'ITEMAMT'       => $itemAmountNet,    // Nettobeträge aller Bestellungsposten
-            'SHIPPINGAMT'   => $shippingAmt, // Versandkosten
-            'HANDLINGAMT'   => $handlingAmt, // Die Verpackung- und Bearbeitungskosten
-            'TAXAMT'        => $taxAmt,            // die Summe aller anfallenden Steuern
+            'ITEMAMT'       => $itemAmountNet,    // net amounts of all positions
+            'SHIPPINGAMT'   => $shippingAmt, // shipping costs
+            'HANDLINGAMT'   => $handlingAmt, // packaging costs an processing fee
+            'TAXAMT'        => $taxAmt,            // sum of all taxes
             'DESC'          => 'Order Nr. '.$orderObj->ID,
             'CURRENCYCODE'  => 'EUR',
             'CUSTOM'        => 'order_id='.$orderObj->ID
@@ -442,7 +450,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $parameters['NOTIFYURL'] = $notifyUrl;
         $response                = $this->hash_call('DoExpressCheckoutPayment', $this->generateUrlParams($parameters));
 
-        // Antwortwerte fuer Eintragung in Datenbank vorbereiten
+        // prepare reply for DB save
         if (isset($response['ORDERTIME'])) {
             $orderTime = str_replace(
                 array(
@@ -460,7 +468,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $response['ORDERTIME_CUSTOM'] = '';
         }
         
-        // Paypal-Bestellung anlegen
+        // create paypal order
         $paypalOrder = new SilvercartPaymentPaypalOrder();
         $paypalOrder->updateOrder(
             $orderObj->ID,
@@ -469,7 +477,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         );
 
         if (isset($response['PAYMENTSTATUS'])) {
-            // Den Bestellstatus an die Rueckmeldung anpassen
+            // adjust order status to reply
             if (in_array($response['PAYMENTSTATUS'], $this->successPaypalStatus)) {
                 $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $this->PaidOrderStatus));
             } else if (in_array($response['PAYMENTSTATUS'], $this->failedPaypalStatus)) {
@@ -488,7 +496,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $this->Log('doExpressCheckoutPayment: Got Response', var_export($response, true));
         $this->Log('doExpressCheckoutPayment: With Parameters', var_export($parameters, true));
 
-        // Status zurueckgeben
+        // return status
         if (strtolower($response['ACK']) != 'success') {
             $this->errorOccured = true;
             $this->addError('Leider konnte uns Paypal keine positive Rückmeldung zu der Zahlungsfähigkeit Ihrer gewählten Bezahlart geben (Paypal Fehler 10417). Aus diesem Grund haben wir Ihre Bestellung storniert.');
@@ -499,7 +507,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
-     * Stellt sicher, dass das Shared Secret korrekt uebergeben wurde.
+     * make shure that the shared secred was passed correctly
      * 
      * @return boolean
      *
@@ -526,6 +534,14 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
+     * called via IPN script; processes the request confirmation and adjusts the
+     * order status;
+     * paypal calls this IPN script and sends all data relevant for the request.
+     * To check if the paypal answer is really from paypal, the answer plus an
+     * additional parameter will be sent back to paypal. paypal answers "VERIFIED"
+     * or "INVALID".
+     * If the answer is "VERIFIED" we check if the order status must be adjusted.
+     *
      * Wird vom IPN-Script aufgerufen und kuemmert sich um die Bestaetigung der
      * gesendeten Anfrage und ggfs. die Anpassung des Status der Bestellung.
      * 
@@ -601,6 +617,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
     
     /**
+     * retireves paypal PayerID from the URL; IPN notification variable is different
+     * from the checkout notification
+     *
      * Holt sich die Paypal PayerID aus der URL. IPN-Benachrichtigungsvariable
      * unterscheidet sich von Checkout-Benachrichtung.
      * 
@@ -626,6 +645,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
+     * accepts the variables and values sent via IPN and saves them to an
+     * assiciative array
+     *
      * Nimmt die per IPN gesendeten Variablen und Werte entgegen und ueber-
      * traegt sie in ein assoziatives Array.
      * 
@@ -688,6 +710,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
+     * returns an associative array with data passed to the field "Custom"
+     *
      * Liefert die im Feld "Custom" uebergebenen Key-Value-Paare als
      * assoziatives Array zurueck.
      * 
@@ -715,10 +739,10 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
-     * Aktualisiert die Lieferadresse der Bestellung
+     * uptates the orders shipping address
      * 
-     * @param int   $ordersId     Die ID der Bestellung
-     * @param array $ipnVariables Die per Request von Paypal gesendeten Variablen
+     * @param int   $ordersId     order's ID
+     * @param array $ipnVariables paypals request variables
      *
      * @return void
      *
@@ -744,7 +768,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
-     * Liefert das in der Session gespeicherte PaypalToken zurueck.
+     * returns the PaypalTokens saved to the session
      *
      * @return string
      *
@@ -763,6 +787,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
+     * Fetches a paypal token via API-call(SetExpressCheckout) which is used for
+     * identification in further steps;
+     *
      * Holt sich ueber einen API-Aufruf bei Paypal ein Token, das fuer die
      * restlichen Schritte als Identifikation verwendet wird.
      * Name der Paypal API Methode: SetExpressCheckout
@@ -795,6 +822,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'CURRENCYCODE'      => 'EUR'
         );
 
+        // define optional parameters
         // Optionale Parameter definieren
         if ($this->mode == 'Live') {
             if (!empty($this->paypalBackLinkGiropaySucess_Live)) {
@@ -819,7 +847,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         }
         
         $apiCallResult = $this->hash_call('SetExpressCheckout', $this->generateUrlParams($parameters));
-    
+
+        // an error has occured
         // Es ist ein Fehler aufgetreten
         if (strtolower($apiCallResult['ACK']) != 'success') {
             $this->log('fetchPaypalToken', var_export($apiCallResult, true));
@@ -835,10 +864,12 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
     
     /**
+     * processes a method call via paypals NVP-API
+     *
      * Fuehrt einen Methodenaufruf ueber die NVP-API von Paypal durch.
      *
-     * @param string $methodName Name der Methode, die aufgerufen werden soll.
-     * @param string $nvpStr     Der originale String, der an den NVP-Server gesendet werden soll
+     * @param string $methodName method to be called
+     * @param string $nvpStr     the string to be sent to the NVP server
      *
      * @return array
      *
@@ -940,10 +971,13 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
     
     /**
+     * Creates and returns a string ("key=value&key=value&...") from an
+     * associative array
+     *
      * Erzeugt aus einem assoziativen Array einen String im Format
      * "key=value&key=value&..." und gibt diesen zurueck.
      *
-     * @param array $parameters Ein assoziatives Array
+     * @param array $parameters an associative array
      *
      * @return string
      *
@@ -963,6 +997,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
     
     /**
+     * adds the session call sign and ID to the URL
+     *
      * Haengt die Sessionkennung und ID an eine URL an.
      * 
      * @param string $url Die URL
@@ -985,6 +1021,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
+     * saves the paypaltoken to the session
+     *
      * Speichert das Paypal-Token in der Session.
      *
      * @param string $token Das Paypal-Token
@@ -1000,6 +1038,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     }
 
     /**
+     * writes the PayerID to the session
+     *
      * Speichert die PayerId in der Session.
      *
      * @param string $payerId Die PayerId
