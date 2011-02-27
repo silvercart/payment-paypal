@@ -27,19 +27,19 @@ $lang['de_DE']['SilvercartPaymentPaypal']['API_DEVELOPMENT_MODE'] = array(
     null,
     'API Entwicklungsmodus'
 );
-$lang['de_DE']['SilvercartPaymentPaypal']['API_LIVE_MODE'] = 'API live mode';
+$lang['de_DE']['SilvercartPaymentPaypal']['API_LIVE_MODE'] = 'API Live Modus';
 $lang['de_DE']['SilvercartPaymentPaypal']['API_PASSWORD'] = array(
     'API Passwort',
     null,
     'API Passwort'
 );
-$lang['de_DE']['SilvercartPaymentPaypal']['API_SIGNATURE'] = 'API signature';
+$lang['de_DE']['SilvercartPaymentPaypal']['API_SIGNATURE'] = 'API Signatur';
 $lang['de_DE']['SilvercartPaymentPaypal']['API_USERNAME'] = array(
     'API Benutzername',
     null,
     'API Benutzername'
 );
-$lang['de_DE']['SilvercartPaymentPaypal']['API_VERSION'] = 'API version';
+$lang['de_DE']['SilvercartPaymentPaypal']['API_VERSION'] = 'API Version';
 $lang['de_DE']['SilvercartPaymentPaypal']['ATTRIBUTED_ORDERSTATUS'] = array(
     'Zuordnung Bestellstatus',
     null,
