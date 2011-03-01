@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright 2010, 2011 pixeltricks GmbH
  *
  * This file is part of SilvercartPaypalPayment.
@@ -16,12 +16,16 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with SilvercartPaypalPayment.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package Silvercart
+ * @subpackage Payment
  */
 
 /**
  * additional information for orders via paypal
  *
- * @package fashionbids
+ * @package Silvercart
+ * @subpackage Payment
  * @author Sascha Koehler <skoehler@pixeltricks.de>
  * @copyright 2010 pixeltricks GmbH
  * @since 24.11.2010
