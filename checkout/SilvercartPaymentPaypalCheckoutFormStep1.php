@@ -34,6 +34,22 @@
 class SilvercartPaymentPaypalCheckoutFormStep1 extends SilvercartCheckoutFormStepPaymentInit {
 
     /**
+     * Here we set some preferences.
+     *
+     * @return void
+     *
+     * @author Sascha Koehler <skoehler@pixeltricks.de>
+     * @copyright 2011 pixeltricks GmbH
+     * @since 07.04.2011
+     */
+    public function preferences() {
+        parent::preferences();
+
+        $this->preferences['stepTitle']     = _t('SilvercartPaymentPaypal.ENTERDATAATPAYPAL');
+        $this->preferences['stepIsVisible'] = true;
+    }
+
+    /**
      * Process the current step
      *
      * @return void

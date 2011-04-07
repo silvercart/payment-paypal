@@ -324,6 +324,19 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         return $fields;
     }
 
+    /**
+     * Set the title for the submit button on the order confirmation step.
+     *
+     * @return string
+     *
+     * @author Sascha Koehler <skoehler@pixeltricks.de>
+     * @copyright 2011 pixeltricks GmbH
+     * @since 07.04.2011
+     */
+    public function getOrderConfirmationSubmitButtonTitle() {
+        return _t('SilvercartPaymentPaypal.ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE');
+    }
+
     // ------------------------------------------------------------------------
     // processing methods
     // ------------------------------------------------------------------------
@@ -403,6 +416,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         if (!$this->errorOccured) {
             $this->savePayerid($_REQUEST['PayerID']);
             $this->controller->NextStep();
+        } else {
+            //Director::redirect($this->controller->Link().'GotoStep/2');
         }
     }
 
@@ -484,8 +499,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'CUSTOM'            => 'order_id=' . $this->order->ID
         );
 
-        $notifyUrl               = Director::absoluteBaseURL() . 'payment-notification/process/' . $this->moduleName;
-        $notifyUrl              .= '?' . $this->sharedSecretVariableName . '=' . urlencode($this->paypalSharedSecret) . '&';
+        $notifyUrl  =  $this->controller->PageByIdentifierCode('SilvercartPaymentNotification')->Link() . 'payment-notification/process/' . $this->moduleName;
+        $notifyUrl .= '?' . $this->sharedSecretVariableName . '=' . urlencode($this->paypalSharedSecret) . '&';
+        $notifyUrl  = Director::absoluteUrl($notifyUrl);
         $parameters['NOTIFYURL'] = $notifyUrl;
         $response                = $this->hash_call('DoExpressCheckoutPayment', $this->generateUrlParams($parameters));
 
@@ -844,23 +860,41 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * @since 17.11.2010
      */
     protected function fetchPaypalToken() {
+        $notifyUrl  =  Director::absoluteUrl($this->controller->PageByIdentifierCode('SilvercartPaymentNotification')->Link().'process/'.$this->moduleName);
         $token      = false;
         $parameters = array(
-            'AMT'               => $this->shoppingCart->getAmountTotal()->getAmount(),
-            'RETURNURL'         => $this->addSessionToUrl($this->getReturnLink()),
-            'CANCELURL'         => $this->addSessionToUrl($this->getCancelLink()),
-            'CUSTOM'            => '',
-            'SHIPTONAME'        => $this->shippingAddress->FirstName.' '.$this->shippingAddress->Surname,
-            'SHIPTOSTREET'      => $this->shippingAddress->Street.' '.$this->shippingAddress->StreetNumber,
-            'SHIPTOCITY'        => $this->shippingAddress->City,
-            'SHIPTOZIP'         => $this->shippingAddress->Postcode,
-            'SHIPTOSTATE'       => $this->shippingAddress->State,
-            'SHIPTOCOUNTRYCODE' => $this->shippingAddress->Country->ISO2,
-            'SHIPTOCOUNTRYNAME' => $this->shippingAddress->Country->Title,
-            'PHONENUM'          => $this->shippingAddress->PhoneAreaCode.' '.$this->shippingAddress->Phone,
-            'CURRENCYCODE'      => $this->shoppingCart->getAmountTotal()->getCurrency()
+            'ADDROVERRIDE'         => '1',
+            'AMT'                  => $this->shoppingCart->getAmountTotal()->getAmount(),
+            'CURRENCYCODE'         => $this->shoppingCart->getAmountTotal()->getCurrency(),
+            'ITEMAMT'              => $this->shoppingCart->getTaxableAmountGrossWithoutFees()->getAmount(),
+            'SHIPPINGAMT'          => $this->shoppingCart->HandlingCostShipment()->getAmount(),
+            'HANDLINGAMT'          => $this->shoppingCart->HandlingCostPayment()->getAmount(),
+            'TAXAMT'               => $this->shoppingCart->getTaxTotal()->getAmount(),
+            'RETURNURL'            => $this->getReturnLink(),
+            'CANCELURL'            => $this->getCancelLink(),
+            'NOTIFYURL'            => $notifyUrl,
+            'CUSTOM'               => '',
+            'SHIPTONAME'           => $this->shippingAddress->FirstName.' '.$this->shippingAddress->Surname,
+            'SHIPTOSTREET'         => $this->shippingAddress->Street.' '.$this->shippingAddress->StreetNumber,
+            'SHIPTOCITY'           => $this->shippingAddress->City,
+            'SHIPTOZIP'            => $this->shippingAddress->Postcode,
+            'SHIPTOSTATE'          => $this->shippingAddress->State,
+            'SHIPTOCOUNTRYCODE'    => $this->shippingAddress->Country->ISO2,
+            'SHIPTOPHONENUM'       => $this->shippingAddress->PhoneAreaCode.' '.$this->shippingAddress->Phone,
         );
-        
+
+        $itemCount = 0;
+
+        foreach ($this->shoppingCart->SilvercartShoppingCartPositions() as $shoppingCartPosition) {
+            $parameters['L_NAME'.$itemCount]           = $shoppingCartPosition->SilvercartProduct()->Title;
+            $parameters['L_DESC'.$itemCount]           = $shoppingCartPosition->SilvercartProduct()->ShortDescription;
+            $parameters['L_AMT'.$itemCount]            = $shoppingCartPosition->SilvercartProduct()->getPrice()->getAmount();
+            $parameters['L_QTY'.$itemCount]            = $shoppingCartPosition->Quantity;
+            $parameters['L_TAXAMT'.$itemCount]         = number_format($shoppingCartPosition->SilvercartProduct()->getTaxAmount(), 2, '.', ',');
+            $parameters['L_ITEMCATEGORY'.$itemCount]   = 'Physical';
+            $itemCount++;
+        }
+
         // define optional parameters
         // Optionale Parameter definieren
         if ($this->mode == 'Live') {
@@ -894,12 +928,15 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $this->Log('fetchPaypalToken', var_export($parameters, true));
             $this->errorOccured = true;
             $this->addError('Die Kommunikation mit Paypal konnte nicht initialisiert werden.');
+            exit();
+            return false;
+        } else {
+
+            $this->Log('fetchPaypalToken: Got Response', var_export($apiCallResult, true));
+            $this->Log('fetchPaypalToken: With Parameters', var_export($parameters, true));
+
+            return $apiCallResult['TOKEN'];
         }
-
-        $this->Log('fetchPaypalToken: Got Response', var_export($apiCallResult, true));
-        $this->Log('fetchPaypalToken: With Parameters', var_export($parameters, true));
-
-        return $apiCallResult['TOKEN'];
     }
 
     /**
@@ -927,7 +964,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         }
 
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_PROXY,"localhost:80");
+        //curl_setopt($ch, CURLOPT_PROXY,"localhost:80");
 
         //turning off the server and peer verification(TrustManager Concept).
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

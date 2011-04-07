@@ -65,7 +65,7 @@ class SilvercartPaymentPaypalNotification extends DataObject {
         //
         // Zahlungsmodul laden
         $paypalModule = DataObject::get_one(
-            'SilvercartPayment',
+            'SilvercartPaymentMethod',
             sprintf(
                 "`Name` = '%s'",
                 $this->moduleName
