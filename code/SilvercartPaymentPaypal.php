@@ -864,12 +864,12 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $token      = false;
         $parameters = array(
             'ADDROVERRIDE'         => '1',
-            'AMT'                  => $this->shoppingCart->getAmountTotal()->getAmount(),
+            'AMT'                  => round((float) $this->shoppingCart->getAmountTotal()->getAmount(),2),
             'CURRENCYCODE'         => $this->shoppingCart->getAmountTotal()->getCurrency(),
-            'ITEMAMT'              => $this->shoppingCart->getTaxableAmountGrossWithoutFees()->getAmount(),
-            'SHIPPINGAMT'          => $this->shoppingCart->HandlingCostShipment()->getAmount(),
-            'HANDLINGAMT'          => $this->shoppingCart->HandlingCostPayment()->getAmount(),
-            'TAXAMT'               => $this->shoppingCart->getTaxTotal()->getAmount(),
+            'ITEMAMT'              => round((float) $this->shoppingCart->getTaxableAmountGrossWithoutFees()->getAmount(),2),
+            'SHIPPINGAMT'          => round((float) $this->shoppingCart->HandlingCostShipment()->getAmount(),2),
+            'HANDLINGAMT'          => round((float) $this->shoppingCart->HandlingCostPayment()->getAmount(),2),
+            'TAXAMT'               => round((float) $this->shoppingCart->getTaxTotal()->getAmount(),2),
             'RETURNURL'            => $this->getReturnLink(),
             'CANCELURL'            => $this->getCancelLink(),
             'NOTIFYURL'            => $notifyUrl,
@@ -888,7 +888,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         foreach ($this->shoppingCart->SilvercartShoppingCartPositions() as $shoppingCartPosition) {
             $parameters['L_NAME'.$itemCount]           = $shoppingCartPosition->SilvercartProduct()->Title;
             $parameters['L_DESC'.$itemCount]           = $shoppingCartPosition->SilvercartProduct()->ShortDescription;
-            $parameters['L_AMT'.$itemCount]            = $shoppingCartPosition->SilvercartProduct()->getPrice()->getAmount();
+            $parameters['L_AMT'.$itemCount]            = round((float) $shoppingCartPosition->SilvercartProduct()->getPrice()->getAmount(),2);
             $parameters['L_QTY'.$itemCount]            = $shoppingCartPosition->Quantity;
             $parameters['L_TAXAMT'.$itemCount]         = number_format($shoppingCartPosition->SilvercartProduct()->getTaxAmount(), 2, '.', ',');
             $parameters['L_ITEMCATEGORY'.$itemCount]   = 'Physical';
