@@ -1,1 +1,1 @@
-$CustomHtmlFormInitOutput
+$defaultOrderConfirmation

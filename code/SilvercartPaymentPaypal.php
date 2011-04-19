@@ -352,8 +352,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * @copyright 2010 pixeltricks GmbH
      * @since 24.11.2010
      */
-    public function processPaymentAfterOrder($orderObj) {
-        return $this->doExpressCheckoutPayment($orderObj);
+    public function processPaymentAfterOrder($orderObj = array()) {
+        return $this->doExpressCheckoutPayment();
     }
 
     /**
@@ -417,7 +417,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $this->savePayerid($_REQUEST['PayerID']);
             $this->controller->NextStep();
         } else {
-            //Director::redirect($this->controller->Link().'GotoStep/2');
+            Director::redirect($this->controller->Link().'GotoStep/2');
         }
     }
 
@@ -451,8 +451,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
 
     /**
      * payment confirmation
-     * 
-     * @param Order $orderObj order object to be processed
      *
      * @return boolean
      *

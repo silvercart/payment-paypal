@@ -51,10 +51,10 @@ class SilvercartPaymentPaypalCheckoutFormStep4 extends SilvercartCheckoutFormSte
                 $checkoutData['orderId']
             );
 
-            if ($this->controller->paymentMethodObj &&
+            if ($this->paymentMethodObj &&
                 $orderObj) {
-
-                $paymentSuccessful = $this->paymentMethodObj->processPaymentAfterOrder($orderObj);
+                $this->paymentMethodObj->setOrder($orderObj);
+                $paymentSuccessful = $this->paymentMethodObj->processPaymentAfterOrder();
             }
 
             if ($paymentSuccessful) {
