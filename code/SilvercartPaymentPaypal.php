@@ -233,7 +233,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * @since 12.11.2010
      */
     public function getCMSFields($params = null) {
-        $fields = parent::getCMSFields_forPopup($params);
+        $fields = parent::getCMSFieldsForModules($params);
         $fieldLabels = self::$field_labels;
 
         $tabApi = new Tab('PaypalAPI');
