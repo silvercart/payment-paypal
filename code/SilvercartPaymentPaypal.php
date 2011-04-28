@@ -842,6 +842,86 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             )
         );
     }
+    
+    /**
+     * Creates and relates required order status and logo images.
+     * 
+     * @return void
+     *
+     * @author Sascha Koehler <skoehler@standardized.de>
+     * @copyright 2011 pixeltricks GmbH
+     * @since 27.04.2011
+     */
+    public function requireDefaultRecords() {
+        parent::requireDefaultRecords();
+        
+        $requiredStatus = array(
+            'payed'             => _t('SilvercartOrderStatus.PAYED'),
+            'paypal_refunded'   => _t('SilvercartOrderStatus.PAYPAL_REFUNDING'),
+            'paypal_pending'    => _t('SilvercartOrderStatus.PAYPAL_PENDING'),
+            'paypal_success'    => _t('SilvercartOrderStatus.PAYPAL_SUCCESS'),
+            'paypal_error'      => _t('SilvercartOrderStatus.PAYPAL_ERROR'),
+            'paypal_canceled'   => _t('SilvercartOrderStatus.PAYPAL_CANCELED')
+        );
+        
+        $paymentLogos = array(
+            'Paypal'  => '/silvercart_payment_paypal/images/horizontal_solution_PPeCheck.png',
+        );
+
+        foreach ($requiredStatus as $code => $title) {
+            if (!DataObject::get_one('SilvercartOrderStatus', sprintf("`Code`='%s'", $code))) {
+                $silvercartOrderStatus = new SilvercartOrderStatus();
+                $silvercartOrderStatus->Title = $title;
+                $silvercartOrderStatus->Code = $code;
+                $silvercartOrderStatus->write();
+            }
+        }
+        
+        $uploadsFolder = DataObject::get_one('Folder', "`Name`='Uploads'");
+        if ($uploadsFolder) {
+            $uploadsFolder = new Folder();
+            $uploadsFolder->Name = 'Uploads';
+            $uploadsFolder->Title = 'Uploads';
+            $uploadsFolder->Filename = 'assets/Uploads/';
+            $uploadsFolder->write();
+        }
+        
+        // check if images exist
+        $paypalModule = DataObject::get_one('SilvercartPaymentMethod', "ClassName = 'SilvercartPaymentPaypal'");
+        foreach ($paymentLogos as $title => $logo) {
+            if ($paypalModule->PaymentLogos()->Count() == 0 && $paypalModule->showPaymentLogos) {
+                $paymentLogo = new SilvercartImage();
+                $paymentLogo->Title = $title;
+                $storedLogo = DataObject::get_one('Image', sprintf("`Name`='%s'", basename($logo)));
+                if ($storedLogo) {
+                    $paymentLogo->ImageID = $storedLogo->ID;
+                } else {
+                    file_put_contents(Director::baseFolder() . '/' . $uploadsFolder->Filename . basename($logo), file_get_contents(Director::baseFolder() . $logo));
+                    $image = new Image();
+                    $image->setFilename($uploadsFolder->Filename . basename($logo));
+                    $image->setName(basename($logo));
+                    $image->Title = basename($logo, '.png');
+                    $image->ParentID = $uploadsFolder->ID;
+                    $image->write();
+                    $paymentLogo->ImageID = $image->ID;
+                }
+                $paymentLogo->write();
+                $paypalModule->PaymentLogos()->add($paymentLogo);
+            }
+        }
+
+        $paypalPayments = DataObject::get('SilvercartPaymentPaypal', "`PaidOrderStatus`=0");
+        if ($paypalPayments) {
+            foreach ($paypalPayments as $paypalPayment) {
+                $paypalPayment->PaidOrderStatus       = DataObject::get_one('SilvercartOrderStatus', "`Code`='payed'")->ID;
+                $paypalPayment->successPaypalStatus   = DataObject::get_one('SilvercartOrderStatus', "`Code`='paypal_success'")->ID;
+                $paypalPayment->failedPaypalStatus    = DataObject::get_one('SilvercartOrderStatus', "`Code`='paypal_error'")->ID;
+                $paypalPayment->refundedPaypalStatus  = DataObject::get_one('SilvercartOrderStatus', "`Code`='paypal_refunded'")->ID;
+                $paypalPayment->pendingPaypalStatus   = DataObject::get_one('SilvercartOrderStatus', "`Code`='paypal_pending'")->ID;
+                $paypalPayment->write();
+            }
+        }
+    }
 
     /**
      * Fetches a paypal token via API-call(SetExpressCheckout) which is used for

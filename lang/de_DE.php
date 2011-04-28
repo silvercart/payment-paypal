@@ -35,6 +35,12 @@ if (array_key_exists('de_DE', $lang) && is_array($lang['de_DE'])) {
 $lang['de_DE']['SilvercartHandlingCostPaypal']['PLURALNAME']    = 'Gebühren';
 $lang['de_DE']['SilvercartHandlingCostPaypal']['SINGULARNAME']  = 'Gebühr';
 
+$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_CANCELED']  = 'Paypal abgebrochen';
+$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_ERROR']     = 'Paypal Fehler';
+$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_REFUNDING'] = 'Paypal Rückerstattung';
+$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_PENDING']   = 'Paypal in Bearbeitung';
+$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_SUCCESS']   = 'Zahlung ist durch Paypal genehmigt';
+
 $lang['de_DE']['SilvercartPaymentPaypal']['API_DEVELOPMENT_MODE']   = 'API Entwicklungsmodus';
 $lang['de_DE']['SilvercartPaymentPaypal']['API_LIVE_MODE']          = 'API Live Modus';
 $lang['de_DE']['SilvercartPaymentPaypal']['API_PASSWORD']           = 'API Passwort';

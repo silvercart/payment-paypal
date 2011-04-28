@@ -26,8 +26,20 @@
 
 global $lang;
 
+
+
+
+
+
+
 $lang['en_US']['SilvercartHandlingCostPaypal']['PLURALNAME']    = 'Gebühren';
 $lang['en_US']['SilvercartHandlingCostPaypal']['SINGULARNAME']  = 'Gebühr';
+
+$lang['en_US']['SilvercartOrderStatus']['PAYPAL_CANCELED']  = 'Paypal canceled';
+$lang['en_US']['SilvercartOrderStatus']['PAYPAL_ERROR']     = 'Paypal error';
+$lang['en_US']['SilvercartOrderStatus']['PAYPAL_REFUNDING'] = 'Paypal refunding';
+$lang['en_US']['SilvercartOrderStatus']['PAYPAL_PENDING']   = 'Paypal pending';
+$lang['en_US']['SilvercartOrderStatus']['PAYPAL_SUCCESS']   = 'Payment approved by Paypal';
 
 $lang['en_US']['SilvercartPaymentPaypal']['API_DEVELOPMENT_MODE']   = 'API development mode';
 $lang['en_US']['SilvercartPaymentPaypal']['API_LIVE_MODE']          = 'API live mode';

@@ -43,6 +43,7 @@ class SilvercartPaymentPaypalCheckoutFormStep4 extends SilvercartCheckoutFormSte
      * @since 06.04.2011
      */
     public function process() {
+       
         if (parent::process()) {
             $paymentSuccessful  = false;
             $checkoutData       = $this->controller->getCombinedStepData();
