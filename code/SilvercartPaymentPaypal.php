@@ -878,7 +878,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         }
         
         $uploadsFolder = DataObject::get_one('Folder', "`Name`='Uploads'");
-        if ($uploadsFolder) {
+        if (!$uploadsFolder) {
             $uploadsFolder = new Folder();
             $uploadsFolder->Name = 'Uploads';
             $uploadsFolder->Title = 'Uploads';
