@@ -416,8 +416,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         if (!$this->errorOccured) {
             $this->savePayerid($_REQUEST['PayerID']);
             $this->controller->NextStep();
-        } else {
-            Director::redirect($this->controller->Link().'GotoStep/2');
         }
     }
 
