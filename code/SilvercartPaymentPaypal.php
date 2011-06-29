@@ -953,12 +953,10 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'ADDROVERRIDE'                          => '1',
             'VERSION'                               => '63',
             'PAYMENTREQUEST_0_AMT'                  => round((float) $this->shoppingCart->getAmountTotal()->getAmount(), 2),
-            'PAYMENTREQUEST_0_ITEMAMT'              => round((float) $this->shoppingCart->getTaxableAmountGrossWithoutFees()->getAmount() - $this->shoppingCart->getTaxTotal()->getAmount(), 2),
+            'PAYMENTREQUEST_0_ITEMAMT'              => round((float) $this->shoppingCart->getTaxableAmountGrossWithoutFees()->getAmount(), 2),
             'PAYMENTREQUEST_0_CURRENCYCODE'         => $this->shoppingCart->getAmountTotal()->getCurrency(),
             'PAYMENTREQUEST_0_SHIPPINGAMT'          => round((float) $this->shoppingCart->HandlingCostShipment()->getAmount(), 2),
-            //'PAYMENTREQUEST_0_SHIPPINGAMT'          => round((float) 0.0,2),
             'PAYMENTREQUEST_0_HANDLINGAMT'          => round((float) $this->shoppingCart->HandlingCostPayment()->getAmount(), 2),
-            'PAYMENTREQUEST_0_TAXAMT'               => round($shoppingCartTaxTotal, 4),
             'RETURNURL'                             => $this->getReturnLink(),
             'CANCELURL'                             => $this->getCancelLink(),
             'NOTIFYURL'                             => $notifyUrl,
@@ -983,44 +981,14 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $positionTaxAmtTotal    = $positionTaxAmt * $shoppingCartPosition->Quantity;
             $taxAmtTotal           += round($positionTaxAmtTotal, 2);
             
-            $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount]           = $shoppingCartPosition->SilvercartProduct()->Title;
+            $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount]           = $shoppingCartPosition->Quantity.' x '.$shoppingCartPosition->SilvercartProduct()->Title;
             $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount]           = $shoppingCartPosition->SilvercartProduct()->ShortDescription;
-            $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount]            = round((float) $shoppingCartPosition->SilvercartProduct()->getPrice()->getAmount() - $shoppingCartPosition->SilvercartProduct()->getTaxAmount(), 2);
-            $parameters['L_PAYMENTREQUEST_0_QTY'.$itemCount]            = $shoppingCartPosition->Quantity;
-            $parameters['L_PAYMENTREQUEST_0_TAXAMT'.$itemCount]         = number_format($positionTaxAmt, 2, '.', ',');
+            $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount]            = round((float) $shoppingCartPosition->getPrice()->getAmount(), 2);
             $parameters['L_PAYMENTREQUEST_0_ITEMCATEGORY'.$itemCount]   = 'Physical';
             
             $itemCount++;
         }
 
-        // We have to adjust to rounding differences of the item positions.
-        // The problem is the sum of the tax amounts, since the shoppingcart
-        // calculates them with 4 decimal places while paypal accepts only 2.
-        // So we have to check if the sum of the taxes for paypal differs from
-        // the total tax amount of the shoppingcart and have to adjust the
-        // total tax amount appropriately and dispose the rounding differences
-        // on the shipping / handling amounts.
-        // As last ressort (no shipping / handling amounts) we have to raise
-        // the total amount for the user.
-        $taxAmtTotal        = number_format($taxAmtTotal, 2, '.', ',');
-        $shoppingCartTotal  = round((float) $this->shoppingCart->getAmountTotal()->getAmount(), 2);
-        
-        $parameters['PAYMENTREQUEST_0_TAXAMT']      = $taxAmtTotal;
-        $parameters['PAYMENTREQUEST_0_AMT']         = $parameters['PAYMENTREQUEST_0_ITEMAMT'] + $parameters['PAYMENTREQUEST_0_SHIPPINGAMT'] + $parameters['PAYMENTREQUEST_0_HANDLINGAMT'] + $parameters['PAYMENTREQUEST_0_TAXAMT'];
-        
-        if ($parameters['PAYMENTREQUEST_0_AMT'] > $shoppingCartTotal) {
-            if ($parameters['PAYMENTREQUEST_0_SHIPPINGAMT'] > 0) {
-                $parameters['PAYMENTREQUEST_0_SHIPPINGAMT'] -= $parameters['PAYMENTREQUEST_0_AMT'] - $shoppingCartTotal;
-                $parameters['PAYMENTREQUEST_0_AMT']          = $shoppingCartTotal;
-            } else if ($parameters['PAYMENTREQUEST_0_HANDLINGAMT'] > 0) {
-                $parameters['PAYMENTREQUEST_0_HANDLINGAMT'] -= $parameters['PAYMENTREQUEST_0_AMT'] - $shoppingCartTotal;
-                $parameters['PAYMENTREQUEST_0_AMT']          = $shoppingCartTotal;
-            }
-        } else if ($parameters['PAYMENTREQUEST_0_AMT'] < $shoppingCartTotal) {
-            $parameters['PAYMENTREQUEST_0_HANDLINGAMT'] += number_format($shoppingCartTotal - $parameters['PAYMENTREQUEST_0_AMT'], 2, '.', ',');
-            $parameters['PAYMENTREQUEST_0_AMT']          = $shoppingCartTotal;
-        }
-        
         // define optional parameters
         // Optionale Parameter definieren
         if ($this->mode == 'Live') {
