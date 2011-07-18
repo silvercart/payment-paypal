@@ -495,7 +495,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'CUSTOM'            => 'order_id=' . $this->order->ID
         );
 
-        $notifyUrl  =  $this->controller->PageByIdentifierCode('SilvercartPaymentNotification')->Link() . 'payment-notification/process/' . $this->moduleName;
+        $notifyUrl  =  $this->controller->PageByIdentifierCode('SilvercartPaymentNotification')->Link() . 'process/' . $this->moduleName;
         $notifyUrl .= '?' . $this->sharedSecretVariableName . '=' . urlencode($this->paypalSharedSecret) . '&';
         $notifyUrl  = Director::absoluteUrl($notifyUrl);
         $parameters['NOTIFYURL'] = $notifyUrl;
