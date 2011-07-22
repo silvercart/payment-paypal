@@ -132,7 +132,7 @@ class SilvercartPaymentPaypalNotification extends DataObject {
                 $paymentPaypalOrder = DataObject::get_one(
                     'SilvercartPaymentPaypalOrder',
                     sprintf(
-                        "\"orderId\" = '%d'",
+                        "\"orderId\" = '%s'",
                         $customVariables['order_id']
                     )
                 );
@@ -146,6 +146,7 @@ class SilvercartPaymentPaypalNotification extends DataObject {
                         $payerId,
                         $ipnVariables
                     );
+                    $paypalModule->Log('SilvercartPaymentPaypalNotification', 'Bestellstatus fuer Bestellung mit ID '.$customVariables['order_id'].'wurde aktualisiert.');
                 } else {
                     $paypalModule->Log('SilvercartPaymentPaypalNotification', 'Das PaymentPaypalOrder Objekt konnte nicht geladen werden für die orderId '.$customVariables['order_id']);
                 }
