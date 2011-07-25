@@ -114,16 +114,16 @@ class SilvercartPaymentPaypalNotification extends DataObject {
                 );
 
                 if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->successPaypalStatus)) {
-                    $orderObj->setOrderStatus(DataObject::get_by_id('OrderStatus', $paypalModule->PaidOrderStatus));
+                    $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->PaidOrderStatus));
                 }
                 if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->failedPaypalStatus)) {
-                    $orderObj->setOrderStatus(DataObject::get_by_id('OrderStatus', $paypalModule->CanceledOrderStatus));
+                    $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->CanceledOrderStatus));
                 }
                 if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->refundedPaypalStatus)) {
-                    $orderObj->setOrderStatus(DataObject::get_by_id('OrderStatus', $paypalModule->RefundedOrderStatus));
+                    $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->RefundedOrderStatus));
                 }
                 if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->pendingPaypalStatus)) {
-                    $orderObj->setOrderStatus(DataObject::get_by_id('OrderStatus', $paypalModule->PendingOrderStatus));
+                    $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->PendingOrderStatus));
                 }                                                                                                                                                                                                                                                                                                       
 
                 //load the payment modul of the payment method
