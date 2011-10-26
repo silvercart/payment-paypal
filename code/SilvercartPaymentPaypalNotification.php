@@ -113,18 +113,20 @@ class SilvercartPaymentPaypalNotification extends DataObject {
                     $customVariables['order_id']
                 );
 
-                if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->successPaypalStatus)) {
-                    $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->PaidOrderStatus));
+                if ($orderObj) {
+                    if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->successPaypalStatus)) {
+                        $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->PaidOrderStatus));
+                    }
+                    if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->failedPaypalStatus)) {
+                        $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->CanceledOrderStatus));
+                    }
+                    if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->refundedPaypalStatus)) {
+                        $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->RefundedOrderStatus));
+                    }
+                    if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->pendingPaypalStatus)) {
+                        $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->PendingOrderStatus));
+                    }
                 }
-                if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->failedPaypalStatus)) {
-                    $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->CanceledOrderStatus));
-                }
-                if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->refundedPaypalStatus)) {
-                    $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->RefundedOrderStatus));
-                }
-                if (in_array($ipnVariables['PAYMENTSTATUS'], $paypalModule->pendingPaypalStatus)) {
-                    $orderObj->setOrderStatus(DataObject::get_by_id('SilvercartOrderStatus', $paypalModule->PendingOrderStatus));
-                }                                                                                                                                                                                                                                                                                                       
 
                 //load the payment modul of the payment method
                 //
