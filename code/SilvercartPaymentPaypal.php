@@ -982,7 +982,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $taxAmtTotal           += round($positionTaxAmtTotal, 2);
             
             $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount]           = $shoppingCartPosition->Quantity.' x '.$shoppingCartPosition->SilvercartProduct()->Title;
-            $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount]           = $shoppingCartPosition->SilvercartProduct()->ShortDescription;
+            $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount]           = substr($shoppingCartPosition->SilvercartProduct()->ShortDescription, 0, 50);
             $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount]            = round((float) $shoppingCartPosition->getPrice()->getAmount(), 2);
             $parameters['L_PAYMENTREQUEST_0_ITEMCATEGORY'.$itemCount]   = 'Physical';
             
@@ -1017,7 +1017,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
 
         // an error has occured
         // Es ist ein Fehler aufgetreten
-        if (strtolower($apiCallResult['ACK']) != 'success') {
+        if (strtolower($apiCallResult['ACK']) != 'success' &&
+            strtolower($apiCallResult['ACK']) != 'successwithwarning') {
             $this->Log('fetchPaypalToken', var_export($apiCallResult, true));
             $this->Log('fetchPaypalToken', var_export($parameters, true));
             $this->errorOccured = true;
