@@ -458,7 +458,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      */
     public function doExpressCheckoutPayment() {
         // Rundungsdifferenzen beseitigen
-        $cartAmountGross    = round((float) $this->order->getAmountGross()->getAmount(), 2);
+        $cartAmountGross    = round((float) $this->order->AmountTotal->getAmount(), 2);
         $cartAmountNet      = round((float) $this->order->getAmountNet()->getAmount(), 2);
         $itemAmountGross    = round((float) $this->order->getPriceGross()->getAmount(), 2);
         $itemAmountNet      = round((float) $this->order->getPriceNet()->getAmount(), 2);
