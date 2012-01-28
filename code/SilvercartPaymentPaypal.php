@@ -464,7 +464,13 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $itemAmountNet      = round((float) $this->order->getPriceNet()->getAmount(), 2);
         $shippingAmt        = round((float) $this->order->HandlingCostShipmentAmount, 2);
         $handlingAmt        = round((float) $this->order->HandlingCostPaymentAmount, 2);
-        $taxAmt             = round((float) $this->order->getTax()->getAmount(), 2);
+
+        $taxTotal = 0.0;
+        foreach ($this->order->getTaxRatesWithoutFees(true, true) as $taxRate) {
+            $taxTotal += $taxRate->Amount->getAmount();
+        }
+        
+        $taxTotal = round($taxTotal, 2);
 
         $this->Log(
                 'doExpressCheckoutPayment: Amounts',
@@ -473,7 +479,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
                 ', itemamt: ' . $itemAmountNet .
                 ', shippingamt: ' . $shippingAmt .
                 ', handlingamt: ' . $handlingAmt .
-                ', taxamt: ' . $taxAmt
+                ', taxamt: ' . $taxTotal
         );
 
         // required fields
@@ -489,7 +495,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'ITEMAMT'           => $itemAmountNet, // net amounts of all positions
             'SHIPPINGAMT'       => $shippingAmt, // shipping costs
             'HANDLINGAMT'       => $handlingAmt, // packaging costs an processing fee
-            'TAXAMT'            => $taxAmt, // sum of all taxes
+            'TAXAMT'            => $taxTotal, // sum of all taxes
             'DESC'              => 'Order Nr. ' . $this->order->OrderNumber,
             'CURRENCYCODE'      => 'EUR',
             'CUSTOM'            => 'order_id=' . $this->order->ID
@@ -944,8 +950,13 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         if (isset($checkoutData['PaymentMethod'])) {
             $this->shoppingCart->setPaymentMethodID($checkoutData['PaymentMethod']);
         }
+
+        $taxTotal = 0.0;
+        foreach ($this->shoppingCart->getTaxTotal() as $taxRate) {
+            $taxTotal += $taxRate->Amount->getAmount();
+        }
         
-        $shoppingCartTaxTotal = (float) round($this->shoppingCart->getTaxTotal()->getAmount(), 2);
+        $shoppingCartTaxTotal = round($taxTotal, 2);
         
         $notifyUrl  =  Director::absoluteUrl($this->controller->PageByIdentifierCode('SilvercartPaymentNotification')->Link().'process/'.$this->moduleName);
         $token      = false;
@@ -984,6 +995,16 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount]           = $shoppingCartPosition->Quantity.' x '.$shoppingCartPosition->SilvercartProduct()->Title;
             $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount]           = substr($shoppingCartPosition->SilvercartProduct()->ShortDescription, 0, 50);
             $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount]            = round((float) $shoppingCartPosition->getPrice()->getAmount(), 2);
+            $parameters['L_PAYMENTREQUEST_0_ITEMCATEGORY'.$itemCount]   = 'Physical';
+            
+            $itemCount++;
+        }
+
+        // Charges and discounts for products
+        foreach ($this->shoppingCart->ChargesAndDiscountsForProducts() as $shoppingCartPosition) {
+            $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount]           = $shoppingCartPosition->Name;
+            $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount]           = '';
+            $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount]            = round((float) $shoppingCartPosition->Price->getAmount(), 2);
             $parameters['L_PAYMENTREQUEST_0_ITEMCATEGORY'.$itemCount]   = 'Physical';
             
             $itemCount++;
