@@ -18,7 +18,6 @@
  * along with SilvercartPrepaymentPayment.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package Silvercart
- * @subpackage Config
- * @ignore
+ * @subpackage payment_paypal
  */
-
+DataObject::add_extension('SilvercartPaymentPaypal', 'SilvercartDataObjectMultilingualDecorator');

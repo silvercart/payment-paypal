@@ -61,12 +61,16 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         'paypalSoapApiServerUrl_Live' => 'VarChar(255)',
         'paypalApiVersion_Dev' => 'VarChar(255)',
         'paypalApiVersion_Live' => 'VarChar(255)',
-        'paypalInfotextCheckout' => 'VarChar(255)',
         'PaidOrderStatus' => 'Int',
         'CanceledOrderStatus' => 'Int',
         'PendingOrderStatus' => 'Int',
         'RefundedOrderStatus' => 'Int'
     );
+    
+    public static $casting = array(
+        'paypalInfotextCheckout' => 'VarChar(255)'
+    );
+    
     /**
      * label definitions for class attributes
      *
@@ -92,7 +96,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         'paypalNvpApiServerUrl_Live' => 'URL zum Paypal NVP API Server',
         'paypalSoapApiServerUrl_Dev' => 'URL zum Paypal SOAP API Server',
         'paypalSoapApiServerUrl_Live' => 'URL zum Paypal SOAP API Server',
-        'paypalInfotextCheckout' => 'Die Zahlung erfolgt per Paypal',
         'PaidOrderStatus' => 'Bestellstatus für Meldung "bezahlt"',
         'CanceledOrderStatus' => 'Bestellstatus für Meldung "abgebrochen"',
         'PendingOrderStatus' => 'Bestellstatus für Meldung "in der Schwebe"',
@@ -111,6 +114,19 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     public static $has_one = array(
         'SilvercartHandlingCost' => 'SilvercartHandlingCostPaypal'
     );
+    
+    /**
+     * 1:n relationships.
+     *
+     * @var array
+     * 
+     * @author Roland Lehmann <rlehmann@pixeltricks.de>
+     * @since 31.01.2012
+     */
+    public static $has_many = array(
+        'SilvercartPaymentPaypalLanguages' => 'SilvercartPaymentPaypalLanguage'
+    );
+    
     /**
      * contains module name for display in the admin backend
      *
@@ -185,6 +201,22 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     public $pendingPaypalStatus = array(
         'Pending'
     );
+    
+    /**
+     * getter for the multilingual attribute paypalInfotextCheckout
+     *
+     * @return string 
+     * 
+     * @author Roland Lehmann <rlehmann@pixeltricks.de>
+     * @since 31.01.2012
+     */
+    public function getpaypalInfotextCheckout() {
+        $text = '';
+        if ($this->getLanguage()) {
+            $text = $this->getLanguage()->paypalInfotextCheckout;
+        }
+        return $text;
+    }
 
     /**
      * i18n for field labels
@@ -320,7 +352,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
                         new DropdownField('RefundedOrderStatus', _t('SilvercartPaymentPaypal.ORDERSTATUS_REFUNDED'), $OrderStatus->map('ID', 'Title'), $this->RefundedOrderStatus)
                 )
         );
-
+        $fields->addFieldToTab('Sections.Translations', new ComplexTableField($this, 'SilvercartPaymentPaypalLanguages', 'SilvercartPaymentPaypalLanguage'));
         return $fields;
     }
 

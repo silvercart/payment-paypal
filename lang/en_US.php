@@ -66,6 +66,9 @@ $lang['en_US']['SilvercartPaymentPaypal']['URLS_LIVE_MODE']         = 'URLs of l
 $lang['en_US']['SilvercartPaymentPaypal']['URL_API_NVP']            = 'URL to the paypal NVP API server';
 $lang['en_US']['SilvercartPaymentPaypal']['URL_API_SOAP']           = 'URL to the paypal SOAP API server';
 
+$lang['en_US']['SilvercartPaymentPaypalLanguage']['SINGULARNAME'] = 'Translation of the payment method PayPal';
+$lang['en_US']['SilvercartPaymentPaypalLanguage']['PLURALNAME'] = 'Translations of the payment method PayPal';
+
 $lang['en_US']['SilvercartPaymentPaypalNotification']['PLURALNAME']     = 'Silvercart Payment Paypal Notifications';
 $lang['en_US']['SilvercartPaymentPaypalNotification']['SINGULARNAME']   = 'Silvercart Payment Paypal Notification';
 
