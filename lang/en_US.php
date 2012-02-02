@@ -24,8 +24,6 @@
  * @ignore
  */
 
-
-
 global $lang;
 
 
@@ -34,8 +32,8 @@ global $lang;
 
 
 
-$lang['en_US']['SilvercartHandlingCostPaypal']['PLURALNAME']    = 'Fees';
-$lang['en_US']['SilvercartHandlingCostPaypal']['SINGULARNAME']  = 'Fee';
+$lang['en_US']['SilvercartHandlingCostPaypal']['PLURALNAME']    = 'Gebühren';
+$lang['en_US']['SilvercartHandlingCostPaypal']['SINGULARNAME']  = 'Gebühr';
 
 $lang['en_US']['SilvercartOrderStatus']['PAYPAL_CANCELED']  = 'Paypal canceled';
 $lang['en_US']['SilvercartOrderStatus']['PAYPAL_ERROR']     = 'Paypal error';

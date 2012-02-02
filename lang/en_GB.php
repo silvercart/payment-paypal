@@ -34,8 +34,8 @@ if (array_key_exists('en_GB', $lang) && is_array($lang['en_GB'])) {
     $lang['en_GB'] = $lang['en_US'];
 }
 
-$lang['en_GB']['SilvercartHandlingCostPaypal']['PLURALNAME']    = 'Fees';
-$lang['en_GB']['SilvercartHandlingCostPaypal']['SINGULARNAME']  = 'Fee';
+$lang['en_GB']['SilvercartHandlingCostPaypal']['PLURALNAME']    = 'Gebühren';
+$lang['en_GB']['SilvercartHandlingCostPaypal']['SINGULARNAME']  = 'Gebühr';
 
 $lang['en_GB']['SilvercartOrderStatus']['PAYPAL_CANCELED']  = 'Paypal canceled';
 $lang['en_GB']['SilvercartOrderStatus']['PAYPAL_ERROR']     = 'Paypal error';
