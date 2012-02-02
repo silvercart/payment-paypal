@@ -461,7 +461,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $itemAmountNet      = round((float) $this->order->getPriceNet()->getAmount(), 2);
         $shippingAmt        = round((float) $this->order->HandlingCostShipmentAmount, 2);
         $handlingAmt        = round((float) $this->order->HandlingCostPaymentAmount, 2);
-        $taxAmt             = round((float) $this->order->getTax()->getAmount(), 2);
+        $taxAmt             = $cartAmountGross - $itemAmountNet - $shippingAmt - $handlingAmt;
 
         $this->Log(
                 'doExpressCheckoutPayment: Amounts',
@@ -488,7 +488,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'HANDLINGAMT'       => $handlingAmt, // packaging costs an processing fee
             'TAXAMT'            => $taxAmt, // sum of all taxes
             'DESC'              => 'Order Nr. ' . $this->order->OrderNumber,
-            'CURRENCYCODE'      => 'EUR',
+            'CURRENCYCODE'      => $this->order->AmountTotal->getCurrency(),
             'CUSTOM'            => 'order_id=' . $this->order->ID
         );
 
