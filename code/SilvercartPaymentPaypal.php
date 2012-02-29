@@ -494,7 +494,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'HANDLINGAMT'       => $handlingAmt, // packaging costs an processing fee
             'TAXAMT'            => $taxTotal, // sum of all taxes
             'DESC'              => 'Order Nr. ' . $this->order->OrderNumber,
-            'CURRENCYCODE'      => 'EUR',
+            'CURRENCYCODE'      => $this->order->getPriceGross()->getCurrency(),
             'CUSTOM'            => 'order_id=' . $this->order->ID
         );
 
