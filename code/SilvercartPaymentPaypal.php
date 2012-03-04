@@ -180,7 +180,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * @since 25.11.2010
      */
     public $pendingPaypalStatus = array(
-        'Pending'
+        'Pending',
+        'Created'
     );
 
     /**
