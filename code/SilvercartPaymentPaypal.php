@@ -941,10 +941,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $this->shoppingCart->setPaymentMethodID($checkoutData['PaymentMethod']);
         }
         
-        $shoppingCartTaxTotal = (float) round($this->shoppingCart->getTaxTotal()->getAmount(), 2);
-        
         $notifyUrl  =  Director::absoluteUrl($this->controller->PageByIdentifierCode('SilvercartPaymentNotification')->Link().'process/'.$this->moduleName);
-        $token      = false;
         $parameters = array(
             'ADDROVERRIDE'                          => '1',
             'VERSION'                               => '63',
