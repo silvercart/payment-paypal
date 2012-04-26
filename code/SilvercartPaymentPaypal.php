@@ -24,9 +24,6 @@
 /**
  * Paypal payment modul
  *
- * TODO:
- *      - implement updateOrderDeliveryAddress
- *
  * @package Silvercart
  * @subpackage Payment
  * @author Sascha Koehler <skoehler@pixeltricks.de>
@@ -199,7 +196,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * @since 25.11.2010
      */
     public $pendingPaypalStatus = array(
-        'Pending'
+        'Pending',
+        'Created'
     );
     
     /**
@@ -529,7 +527,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'HANDLINGAMT'       => $handlingAmt, // packaging costs an processing fee
             'TAXAMT'            => $taxTotal, // sum of all taxes
             'DESC'              => 'Order Nr. ' . $this->order->OrderNumber,
-            'CURRENCYCODE'      => 'EUR',
+            'CURRENCYCODE'      => $this->order->getPriceGross()->getCurrency(),
             'CUSTOM'            => 'order_id=' . $this->order->ID
         );
 
@@ -840,7 +838,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * @since 24.11.2010
      */
     public function updateOrderDeliveryAddress($ordersId, $ipnVariables) {
-        // TODO
     }
 
     /**
@@ -982,16 +979,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         if (isset($checkoutData['PaymentMethod'])) {
             $this->shoppingCart->setPaymentMethodID($checkoutData['PaymentMethod']);
         }
-
-        $taxTotal = 0.0;
-        foreach ($this->shoppingCart->getTaxTotal() as $taxRate) {
-            $taxTotal += $taxRate->Amount->getAmount();
-        }
-        
-        $shoppingCartTaxTotal = round($taxTotal, 2);
         
         $notifyUrl  =  Director::absoluteUrl($this->controller->PageByIdentifierCode('SilvercartPaymentNotification')->Link().'process/'.$this->moduleName);
-        $token      = false;
         $parameters = array(
             'ADDROVERRIDE'                          => '1',
             'VERSION'                               => '63',
@@ -1023,23 +1012,25 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $positionTaxAmt         = round($shoppingCartPosition->SilvercartProduct()->getTaxAmount(), 2);
             $positionTaxAmtTotal    = $positionTaxAmt * $shoppingCartPosition->Quantity;
             $taxAmtTotal           += round($positionTaxAmtTotal, 2);
-            
+
             $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount]           = $shoppingCartPosition->Quantity.' x '.$shoppingCartPosition->SilvercartProduct()->Title;
             $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount]           = substr($shoppingCartPosition->SilvercartProduct()->ShortDescription, 0, 50);
             $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount]            = round((float) $shoppingCartPosition->getPrice()->getAmount(), 2);
             $parameters['L_PAYMENTREQUEST_0_ITEMCATEGORY'.$itemCount]   = 'Physical';
-            
+
             $itemCount++;
         }
 
         // Charges and discounts for products
-        foreach ($this->shoppingCart->ChargesAndDiscountsForProducts() as $shoppingCartPosition) {
-            $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount]           = $shoppingCartPosition->Name;
-            $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount]           = '';
-            $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount]            = round((float) $shoppingCartPosition->Price->getAmount(), 2);
-            $parameters['L_PAYMENTREQUEST_0_ITEMCATEGORY'.$itemCount]   = 'Physical';
-            
-            $itemCount++;
+        if ($this->shoppingCart->HasChargesAndDiscountsForProducts()) {
+            foreach ($this->shoppingCart->ChargesAndDiscountsForProducts() as $shoppingCartPosition) {
+                $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount]           = $shoppingCartPosition->Name;
+                $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount]           = '';
+                $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount]            = round((float) $shoppingCartPosition->Price->getAmount(), 2);
+                $parameters['L_PAYMENTREQUEST_0_ITEMCATEGORY'.$itemCount]   = 'Physical';
+
+                $itemCount++;
+            }
         }
 
         // define optional parameters
