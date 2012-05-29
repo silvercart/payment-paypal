@@ -920,7 +920,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         }
         
         // check if images exist
-        $paypalModule = DataObject::get_one('SilvercartPaymentMethod', "ClassName = 'SilvercartPaymentPaypal'");
+        $paypalModule = DataObject::get_one('SilvercartPaymentMethod', "`SilvercartPaymentMethod`.`ClassName` = 'SilvercartPaymentPaypal'");
         foreach ($paymentLogos as $title => $logo) {
             if ($paypalModule->PaymentLogos()->Count() == 0 && $paypalModule->showPaymentLogos) {
                 $paymentLogo = new SilvercartImage();
