@@ -65,7 +65,7 @@ class SilvercartPaymentPaypalNotification extends DataObject {
         //
         // Zahlungsmodul laden
         $paypalModule = DataObject::get_one(
-            'SilvercartPaymentMethod',
+            'SilvercartPaymentPaypal',
             sprintf(
                 "`Name` = '%s'",
                 $this->moduleName
@@ -150,7 +150,7 @@ class SilvercartPaymentPaypalNotification extends DataObject {
                     );
                     $paypalModule->Log('SilvercartPaymentPaypalNotification', 'Bestellstatus fuer Bestellung mit ID '.$customVariables['order_id'].'wurde aktualisiert.');
                 } else {
-                    $paypalModule->Log('SilvercartPaymentPaypalNotification', 'Das PaymentPaypalOrder Objekt konnte nicht geladen werden für die orderId '.$customVariables['order_id']);
+                    $paypalModule->Log('SilvercartPaymentPaypalNotification', 'Das PaymentPaypalOrder Objekt konnte nicht geladen werden f√ºr die orderId '.$customVariables['order_id']);
                 }
             } else {
                 $paypalModule->Log('SilvercartPaymentPaypalNotification', 'Kein valider IPN-Call; Requestvariablen: '.var_export($_REQUEST, true));
