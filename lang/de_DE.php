@@ -37,11 +37,11 @@ if (array_key_exists('de_DE', $lang) && is_array($lang['de_DE'])) {
 $lang['de_DE']['SilvercartHandlingCostPaypal']['PLURALNAME']    = 'Gebühren';
 $lang['de_DE']['SilvercartHandlingCostPaypal']['SINGULARNAME']  = 'Gebühr';
 
-$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_CANCELED']  = 'Paypal abgebrochen';
-$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_ERROR']     = 'Paypal Fehler';
-$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_REFUNDING'] = 'Paypal Rückerstattung';
-$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_PENDING']   = 'Paypal in Bearbeitung';
-$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_SUCCESS']   = 'Zahlung ist durch Paypal genehmigt';
+$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_CANCELED']  = 'PayPal abgebrochen';
+$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_ERROR']     = 'PayPal Fehler';
+$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_REFUNDING'] = 'PayPal Rückerstattung';
+$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_PENDING']   = 'PayPal in Bearbeitung';
+$lang['de_DE']['SilvercartOrderStatus']['PAYPAL_SUCCESS']   = 'Zahlung ist durch PayPal genehmigt';
 
 $lang['de_DE']['SilvercartPaymentPaypal']['API_DEVELOPMENT_MODE']   = 'API Entwicklungsmodus';
 $lang['de_DE']['SilvercartPaymentPaypal']['API_LIVE_MODE']          = 'API Live Modus';
@@ -50,9 +50,9 @@ $lang['de_DE']['SilvercartPaymentPaypal']['API_SIGNATURE']          = 'API Signa
 $lang['de_DE']['SilvercartPaymentPaypal']['API_USERNAME']           = 'API Benutzername';
 $lang['de_DE']['SilvercartPaymentPaypal']['API_VERSION']            = 'API Version';
 $lang['de_DE']['SilvercartPaymentPaypal']['ATTRIBUTED_ORDERSTATUS'] = 'Zuordnung Bestellstatus';
-$lang['de_DE']['SilvercartPaymentPaypal']['CHECKOUT_URL']           = 'URL zum Paypal Checkout';
-$lang['de_DE']['SilvercartPaymentPaypal']['ENTERDATAATPAYPAL']      = 'Zahlung bei Paypal';
-$lang['de_DE']['SilvercartPaymentPaypal']['INFOTEXT_CHECKOUT']      = 'Die Zahlung erfolgt per Paypal';
+$lang['de_DE']['SilvercartPaymentPaypal']['CHECKOUT_URL']           = 'URL zum PayPal Checkout';
+$lang['de_DE']['SilvercartPaymentPaypal']['ENTERDATAATPAYPAL']      = 'Zahlung bei PayPal';
+$lang['de_DE']['SilvercartPaymentPaypal']['INFOTEXT_CHECKOUT']      = 'Die Zahlung erfolgt per PayPal';
 $lang['de_DE']['SilvercartPaymentPaypal']['ORDERSTATUS_CANCELED']   = 'Bestellstatus für Meldung "abgebrochen"';
 $lang['de_DE']['SilvercartPaymentPaypal']['ORDERSTATUS_PAYED']      = 'Bestellstatus für Meldung "bezahlt"';
 $lang['de_DE']['SilvercartPaymentPaypal']['ORDERSTATUS_PENDING']    = 'Bestellstatus für Meldung "in der Schwebe"';
@@ -60,11 +60,11 @@ $lang['de_DE']['SilvercartPaymentPaypal']['ORDERSTATUS_REFUNDED']   = 'Bestellst
 $lang['de_DE']['SilvercartPaymentPaypal']['PLURALNAME']             = 'Bezahlarten';
 $lang['de_DE']['SilvercartPaymentPaypal']['SHARED_SECRET']          = 'Shared Secret zur Absicherung der Kommunikation';
 $lang['de_DE']['SilvercartPaymentPaypal']['SINGULARNAME']           = 'Bezahlart';
-$lang['de_DE']['SilvercartPaymentPaypal']['ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE'] = 'Weiter zur Bezahlung bei Paypal';
+$lang['de_DE']['SilvercartPaymentPaypal']['ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE'] = 'Kaufen & weiter zur Bezahlung bei PayPal';
 $lang['de_DE']['SilvercartPaymentPaypal']['URLS_DEV_MODE']          = 'URLs Entwicklungsmodus';
 $lang['de_DE']['SilvercartPaymentPaypal']['URLS_LIVE_MODE']         = 'URLs Livemodus';
-$lang['de_DE']['SilvercartPaymentPaypal']['URL_API_NVP']            = 'URL zum Paypal NVP API Server';
-$lang['de_DE']['SilvercartPaymentPaypal']['URL_API_SOAP']           = 'URL zum Paypal SOAP API Server';
+$lang['de_DE']['SilvercartPaymentPaypal']['URL_API_NVP']            = 'URL zum PayPal NVP API Server';
+$lang['de_DE']['SilvercartPaymentPaypal']['URL_API_SOAP']           = 'URL zum PayPal SOAP API Server';
 
 $lang['de_DE']['SilvercartPaymentPaypalLanguage']['SINGULARNAME'] = 'Übersetzung der Zahlart PayPal';
 $lang['de_DE']['SilvercartPaymentPaypalLanguage']['PLURALNAME'] = 'Übersetzungen der Zahlart PayPal';
@@ -72,5 +72,5 @@ $lang['de_DE']['SilvercartPaymentPaypalLanguage']['PLURALNAME'] = 'Übersetzunge
 $lang['de_DE']['SilvercartPaymentPaypalNotification']['PLURALNAME']     = 'Zahlungsbenachrichtigungen';
 $lang['de_DE']['SilvercartPaymentPaypalNotification']['SINGULARNAME']   = 'Zahlungsbenachrichtigung';
 
-$lang['de_DE']['SilvercartPaymentPaypalOrder']['PLURALNAME']    = 'Paypal Bestellungen';
-$lang['de_DE']['SilvercartPaymentPaypalOrder']['SINGULARNAME']  = 'Paypal Bestellung';
+$lang['de_DE']['SilvercartPaymentPaypalOrder']['PLURALNAME']    = 'PayPal Bestellungen';
+$lang['de_DE']['SilvercartPaymentPaypalOrder']['SINGULARNAME']  = 'PayPal Bestellung';
