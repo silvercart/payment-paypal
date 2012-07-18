@@ -897,7 +897,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         );
 
         foreach ($requiredStatus as $code => $title) {
-            if (!DataObject::get_one('SilvercartOrderStatus', sprintf("`Code`='%s'", $code))) {
+            if (!DataObject::get_one('SilvercartOrderStatus', sprintf("`Code`='%s'", $code), true, "SilvercartOrderStatus.ID")) {
                 $silvercartOrderStatus = new SilvercartOrderStatus();
                 $silvercartOrderStatus->Title = $title;
                 $silvercartOrderStatus->Code = $code;
@@ -915,7 +915,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         }
         
         // check if images exist
-        $paypalModule = DataObject::get_one('SilvercartPaymentMethod', "`SilvercartPaymentMethod`.`ClassName` = 'SilvercartPaymentPaypal'");
+        $paypalModule = DataObject::get_one('SilvercartPaymentMethod', "`SilvercartPaymentMethod`.`ClassName` = 'SilvercartPaymentPaypal'", true, "SilvercartPaymentMethod.ID");
         foreach ($paymentLogos as $title => $logo) {
             if ($paypalModule->PaymentLogos()->Count() == 0 && $paypalModule->showPaymentLogos) {
                 $paymentLogo = new SilvercartImage();
