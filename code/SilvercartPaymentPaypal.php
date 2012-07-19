@@ -1003,14 +1003,24 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $itemCount          = 0;
         $taxAmtTotal        = 0.0;
 
-        foreach ($this->shoppingCart->SilvercartShoppingCartPositions() as $shoppingCartPosition) {
-            $positionTaxAmt         = round($shoppingCartPosition->SilvercartProduct()->getTaxAmount(), 2);
+        $shoppingCartPositions = $this->shoppingCart->getTaxableShoppingcartPositions();
+        foreach ($shoppingCartPositions as $shoppingCartPosition) {
+            if (method_exists($shoppingCartPosition, 'getTaxAmount')) {
+                $positionTaxAmt = round($shoppingCartPosition->getTaxAmount(), 2);
+            } else {
+                $positionTaxAmt = round($shoppingCartPosition->SilvercartProduct()->getTaxAmount(), 2);
+            }
             $positionTaxAmtTotal    = $positionTaxAmt * $shoppingCartPosition->Quantity;
             $taxAmtTotal           += round($positionTaxAmtTotal, 2);
 
-            $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount]           = $shoppingCartPosition->Quantity.' x '.$shoppingCartPosition->SilvercartProduct()->Title;
-            $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount]           = substr($shoppingCartPosition->SilvercartProduct()->ShortDescription, 0, 50);
-            $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount]            = round((float) $shoppingCartPosition->getPrice()->getAmount(), 2);
+            $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount] = $shoppingCartPosition->Quantity.' x '.$shoppingCartPosition->getTitle();
+
+            if (method_exists($shoppingCartPosition, 'getShortDescription')) {
+                $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount] = substr($shoppingCartPosition->getShortDescription(), 0, 50);
+            } else {
+                $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount] = substr($shoppingCartPosition->SilvercartProduct()->ShortDescription, 0, 50);
+            }
+            $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount] = round((float) $shoppingCartPosition->getPrice()->getAmount(), 2);
             $parameters['L_PAYMENTREQUEST_0_ITEMCATEGORY'.$itemCount]   = 'Physical';
 
             $itemCount++;
