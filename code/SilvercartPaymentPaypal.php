@@ -1018,7 +1018,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             if (method_exists($shoppingCartPosition, 'getShortDescription')) {
                 $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount] = substr($shoppingCartPosition->getShortDescription(), 0, 50);
             } else {
-                $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount] = substr($shoppingCartPosition->SilvercartProduct()->ShortDescription, 0, 50);
+                $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount] = substr($shoppingCartPosition->SilvercartProduct()->getShortDescription(false), 0, 50);
             }
             $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount] = round((float) $shoppingCartPosition->getPrice()->getAmount(), 2);
             $parameters['L_PAYMENTREQUEST_0_ITEMCATEGORY'.$itemCount]   = 'Physical';
