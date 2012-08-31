@@ -37,10 +37,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * db field definitions
      *
      * @var array
-     *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 12.11.2010
      */
     public static $db = array(
         'paypalSharedSecret' => 'VarChar(255)',
@@ -64,6 +60,11 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         'RefundedOrderStatus' => 'Int'
     );
     
+    /**
+     * Casting properties
+     *
+     * @var array
+     */
     public static $casting = array(
         'paypalInfotextCheckout' => 'VarChar(255)'
     );
@@ -72,10 +73,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * label definitions for class attributes
      *
      * @var array
-     *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 12.11.2010
      */
     public static $field_labels = array(
         'paypalSharedSecret' => 'Shared Secret zur Absicherung der Kommunikation',
@@ -104,9 +101,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     /**
      * define 1:1 relations
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 24.11.2010
+     * @var array
      */
     public static $has_one = array(
         'SilvercartHandlingCost' => 'SilvercartHandlingCostPaypal'
@@ -116,9 +111,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * 1:n relationships.
      *
      * @var array
-     * 
-     * @author Roland Lehmann <rlehmann@pixeltricks.de>
-     * @since 31.01.2012
      */
     public static $has_many = array(
         'SilvercartPaymentPaypalLanguages' => 'SilvercartPaymentPaypalLanguage'
@@ -128,30 +120,18 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * contains module name for display in the admin backend
      *
      * @var string
-     *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 12.11.2010
      */
     protected $moduleName = 'Paypal';
     /**
      * contains name for the shared secret ID; Used by paypal at the IPN answer
      *
      * @var string
-     *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 23.11.2010
      */
     protected $sharedSecretVariableName = 'sh';
     /**
      * contains all strings of the paypal answer which declare the transaction status false
      *
      * @var array
-     *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 25.11.2010
      */
     public $failedPaypalStatus = array(
         'Denied',
@@ -163,10 +143,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * contains all strings of the paypal answer which declare the transaction status true
      *
      * @var array
-     *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 25.11.2010
      */
     public $successPaypalStatus = array(
         'Completed',
@@ -177,10 +153,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * contains all strings of the paypal answer of a withdrawn payment
      *
      * @var array
-     *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 25.11.2010
      */
     public $refundedPaypalStatus = array(
         'Refunded',
@@ -190,10 +162,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * contains all strings of the paypal answer which declare the transaction status pending
      *
      * @var array
-     *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 25.11.2010
      */
     public $pendingPaypalStatus = array(
         'Pending',
@@ -482,9 +450,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return boolean
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 24.11.2010
+     * @author Sascha Koehler <skoehler@pixeltricks.de>, Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 31.08.2012
      */
     public function doExpressCheckoutPayment() {
         // Rundungsdifferenzen beseitigen
@@ -526,7 +493,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'CUSTOM'            => 'order_id=' . $this->order->ID
         );
 
-        $notifyUrl  =  $this->controller->PageByIdentifierCode('SilvercartPaymentNotification')->Link() . 'process/' . $this->moduleName;
+        $notifyUrl  = SilvercartTools::PageByIdentifierCode('SilvercartPaymentNotification')->Link() . 'process/' . $this->moduleName;
         $notifyUrl .= '?' . $this->sharedSecretVariableName . '=' . urlencode($this->paypalSharedSecret) . '&';
         $notifyUrl  = Director::absoluteUrl($notifyUrl);
         $parameters['NOTIFYURL'] = $notifyUrl;
@@ -958,15 +925,18 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * Holt sich ueber einen API-Aufruf bei Paypal ein Token, das fuer die
      * restlichen Schritte als Identifikation verwendet wird.
      * Name der Paypal API Methode: SetExpressCheckout
+     * 
+     * @param array $checkoutData Checkout data to inject
      *
      * @return string|boolean false
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 17.11.2010
+     * @author Sascha Koehler <skoehler@pixeltricks.de>, Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 31.08.2012
      */
-    protected function fetchPaypalToken() {
-        $checkoutData = $this->controller->getCombinedStepData();
+    public function fetchPaypalToken($checkoutData = null) {
+        if (is_null($checkoutData)) {
+            $checkoutData = $this->controller->getCombinedStepData();
+        }
         
         if (isset($checkoutData['ShippingMethod'])) {
             $this->shoppingCart->setShippingMethodID($checkoutData['ShippingMethod']);
@@ -975,7 +945,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $this->shoppingCart->setPaymentMethodID($checkoutData['PaymentMethod']);
         }
         
-        $notifyUrl  =  Director::absoluteUrl($this->controller->PageByIdentifierCode('SilvercartPaymentNotification')->Link().'process/'.$this->moduleName);
+        $notifyUrl  =  Director::absoluteUrl(SilvercartTools::PageByIdentifierCode('SilvercartPaymentNotification')->Link().'process/'.$this->moduleName);
         $parameters = array(
             'ADDROVERRIDE'                          => '1',
             'VERSION'                               => '63',
@@ -1250,11 +1220,10 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return void
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 18.11.2010
+     * @author Sascha Koehler <skoehler@pixeltricks.de>, Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 31.08.2012
      */
-    protected function saveToken($token) {
+    public function saveToken($token) {
         $_SESSION['paypal_module_token'] = $token;
     }
 
@@ -1267,11 +1236,10 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return void
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 19.11.2010
+     * @author Sascha Koehler <skoehler@pixeltricks.de>, Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 31.08.2012
      */
-    protected function savePayerid($payerId) {
+    public function savePayerid($payerId) {
         $_SESSION['paypal_module_payer_id'] = $payerId;
     }
 
