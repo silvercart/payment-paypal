@@ -863,47 +863,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'Paypal'  => '/silvercart_payment_paypal/images/horizontal_solution_PPeCheck.png',
         );
 
-        foreach ($requiredStatus as $code => $title) {
-            if (!DataObject::get_one('SilvercartOrderStatus', sprintf("`Code`='%s'", $code), true, "SilvercartOrderStatus.ID")) {
-                $silvercartOrderStatus = new SilvercartOrderStatus();
-                $silvercartOrderStatus->Title = $title;
-                $silvercartOrderStatus->Code = $code;
-                $silvercartOrderStatus->write();
-            }
-        }
-        
-        $uploadsFolder = DataObject::get_one('Folder', "`Name`='Uploads'");
-        if (!$uploadsFolder) {
-            $uploadsFolder = new Folder();
-            $uploadsFolder->Name = 'Uploads';
-            $uploadsFolder->Title = 'Uploads';
-            $uploadsFolder->Filename = 'assets/Uploads/';
-            $uploadsFolder->write();
-        }
-        
-        // check if images exist
-        $paypalModule = DataObject::get_one('SilvercartPaymentMethod', "`SilvercartPaymentMethod`.`ClassName` = 'SilvercartPaymentPaypal'", true, "SilvercartPaymentMethod.ID");
-        foreach ($paymentLogos as $title => $logo) {
-            if ($paypalModule->PaymentLogos()->Count() == 0 && $paypalModule->showPaymentLogos) {
-                $paymentLogo = new SilvercartImage();
-                $paymentLogo->Title = $title;
-                $storedLogo = DataObject::get_one('Image', sprintf("`Name`='%s'", basename($logo)));
-                if ($storedLogo) {
-                    $paymentLogo->ImageID = $storedLogo->ID;
-                } else {
-                    file_put_contents(Director::baseFolder() . '/' . $uploadsFolder->Filename . basename($logo), file_get_contents(Director::baseFolder() . $logo));
-                    $image = new Image();
-                    $image->setFilename($uploadsFolder->Filename . basename($logo));
-                    $image->setName(basename($logo));
-                    $image->Title = basename($logo, '.png');
-                    $image->ParentID = $uploadsFolder->ID;
-                    $image->write();
-                    $paymentLogo->ImageID = $image->ID;
-                }
-                $paymentLogo->write();
-                $paypalModule->PaymentLogos()->add($paymentLogo);
-            }
-        }
+        parent::createRequiredOrderStatus($requiredStatus);
+        parent::createLogoImageObjects($paymentLogos, 'SilvercartPaymentPaypal');
 
         $paypalPayments = DataObject::get('SilvercartPaymentPaypal', "`PaidOrderStatus`=0");
         if ($paypalPayments) {
