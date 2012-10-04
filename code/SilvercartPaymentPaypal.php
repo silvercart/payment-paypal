@@ -927,7 +927,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'PAYMENTREQUEST_0_SHIPTOCITY'           => $this->shippingAddress->City,
             'PAYMENTREQUEST_0_SHIPTOZIP'            => $this->shippingAddress->Postcode,
             'PAYMENTREQUEST_0_SHIPTOSTATE'          => $this->shippingAddress->State,
-            'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'    => $this->shippingAddress->Country->ISO2,
+            'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'    => $this->shippingAddress->SilvercartCountry()->ISO2,
             'PAYMENTREQUEST_0_SHIPTOPHONENUM'       => $this->shippingAddress->PhoneAreaCode.' '.$this->shippingAddress->Phone,
         );
 
