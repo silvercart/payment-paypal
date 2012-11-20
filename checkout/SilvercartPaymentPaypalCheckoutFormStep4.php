@@ -39,11 +39,9 @@ class SilvercartPaymentPaypalCheckoutFormStep4 extends SilvercartCheckoutFormSte
      * @return void
      *
      * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2011 pixeltricks GmbH
      * @since 06.04.2011
      */
     public function process() {
-       
         if (parent::process()) {
             $paymentSuccessful  = false;
             $checkoutData       = $this->controller->getCombinedStepData();
@@ -61,6 +59,8 @@ class SilvercartPaymentPaypalCheckoutFormStep4 extends SilvercartCheckoutFormSte
             if ($paymentSuccessful) {
                 $this->controller->addCompletedStep();
                 $this->controller->NextStep();
+            } else {
+                return $this->renderError();
             }
         }
     }
