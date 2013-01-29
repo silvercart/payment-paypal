@@ -905,7 +905,12 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         if (isset($checkoutData['PaymentMethod'])) {
             $this->shoppingCart->setPaymentMethodID($checkoutData['PaymentMethod']);
         }
-        
+
+        if ($this->shippingAddress->IsPackstation) {
+            $streetInfo = $this->shippingAddress->Packstation.' '.$this->shippingAddress->PostNumber;
+        } else {
+            $streetInfo = $this->shippingAddress->Street.' '.$this->shippingAddress->StreetNumber;
+        }
         $notifyUrl  =  Director::absoluteUrl(SilvercartTools::PageByIdentifierCode('SilvercartPaymentNotification')->Link().'process/'.$this->moduleName);
         $parameters = array(
             'ADDROVERRIDE'                          => '1',
@@ -923,7 +928,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             'PAYMENTREQUEST_0_CANCELURL'            => $this->getCancelLink(),
             'PAYMENTREQUEST_0_NOTIFYURL'            => $notifyUrl,
             'PAYMENTREQUEST_0_SHIPTONAME'           => $this->shippingAddress->FirstName.' '.$this->shippingAddress->Surname,
-            'PAYMENTREQUEST_0_SHIPTOSTREET'         => $this->shippingAddress->Street.' '.$this->shippingAddress->StreetNumber,
+            'PAYMENTREQUEST_0_SHIPTOSTREET'         => $streetInfo,
             'PAYMENTREQUEST_0_SHIPTOCITY'           => $this->shippingAddress->City,
             'PAYMENTREQUEST_0_SHIPTOZIP'            => $this->shippingAddress->Postcode,
             'PAYMENTREQUEST_0_SHIPTOSTATE'          => $this->shippingAddress->State,
