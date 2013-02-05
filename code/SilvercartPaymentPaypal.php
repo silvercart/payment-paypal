@@ -393,9 +393,8 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return void
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 19.11.2010
+     * @author Sascha Koehler <skoehler@pixeltricks.de>>, Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 05.02.2013
      */
     public function processReturnJumpFromPaymentProvider() {
         if (!isset($_REQUEST['token'])) {
@@ -414,6 +413,12 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         if (!$this->errorOccured) {
             $this->savePayerid($_REQUEST['PayerID']);
             $this->controller->NextStep();
+        } else {
+            $this->controller->removeCompletedStep();
+            $this->controller->removeCompletedStep(6);
+            $this->controller->removeCompletedStep(5);
+            $this->controller->setCurrentStep(5);
+            Director::redirect($this->controller->Link(), 302);
         }
     }
 
