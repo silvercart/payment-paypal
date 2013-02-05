@@ -54,16 +54,15 @@ class SilvercartPaymentPaypalCheckoutFormStep1 extends SilvercartCheckoutFormSte
      *
      * @return void
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2011 pixeltricks GmbH
-     * @since 06.04.2011
+     * @author Sascha Koehler <skoehler@pixeltricks.de>, Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 05.02.2013
      */
     public function process() {
         if (parent::process()) {
             $member         = Member::currentUser();
             $checkoutData   = $this->controller->getCombinedStepData();
 
-            $this->paymentMethodObj->setCancelLink(Director::absoluteURL($this->controller->Link()) . 'Cancel');
+            $this->paymentMethodObj->setCancelLink(Director::absoluteURL($this->controller->Link()) . 'GotoStep/4');
             $this->paymentMethodObj->setReturnLink(Director::absoluteURL($this->controller->Link()));
 
             $this->paymentMethodObj->processPaymentBeforeOrder();
