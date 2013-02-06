@@ -18,14 +18,14 @@
  * along with SilvercartPaypalPayment.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package Silvercart
- * @subpackage Payment
+ * @subpackage Payment_Paypal
  */
 
 /**
  * handling costs for paypal payment
  *
  * @package Silvercart
- * @subpackage Payment
+ * @subpackage Payment_Paypal
  * @author Sascha Köhler <skoehler@pixeltricks.de>
  * @copyright 2010 pixeltricks GmbH
  * @since 18.02.2011

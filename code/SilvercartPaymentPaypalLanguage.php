@@ -17,13 +17,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with SilverCart.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @package SilverCart
- * @subpackage paypal_payment
+ * @package Silvercart
+ * @subpackage Payment_Paypal
  */
 
 /**
  * carries multilingual attributes for SilvercartPaymentPaypal
  *
+ * @package Silvercart
+ * @subpackage Payment_Paypal
  * @author Roland Lehmann <rlehmann@pixeltricks.de>
  * @copyright Pixeltricks GmbH
  * @since 31.01.2012
