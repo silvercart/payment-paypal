@@ -22,3 +22,31 @@
  * @ignore
  */
 DataObject::add_extension('SilvercartPaymentPaypal', 'SilvercartDataObjectMultilingualDecorator');
+
+// ----------------------------------------------------------------------------
+// Blacklists for SilvercartRestfulServer
+// ----------------------------------------------------------------------------
+SilvercartRestfulServer::addApiAccessBlackListFields(
+    'SilvercartPaymentPaypal',
+    array(
+         'paypalSharedSecret',
+         'paypalCheckoutUrl_Dev',
+         'paypalCheckoutUrl_Live',
+         'paypalApiUsername_Dev',
+         'paypalApiUsername_Live',
+         'paypalApiPassword_Dev',
+         'paypalApiPassword_Live',
+         'paypalApiSignature_Dev',
+         'paypalApiSignature_Live',
+         'paypalNvpApiServerUrl_Dev',
+         'paypalNvpApiServerUrl_Live',
+         'paypalSoapApiServerUrl_Dev',
+         'paypalSoapApiServerUrl_Live',
+         'paypalApiVersion_Dev',
+         'paypalApiVersion_Live',
+         'PaidOrderStatus',
+         'CanceledOrderStatus',
+         'PendingOrderStatus',
+         'RefundedOrderStatus',
+    )
+);
