@@ -34,24 +34,9 @@
 class SilvercartPaymentPaypalLanguage extends SilvercartPaymentMethodLanguage {
     
     /**
-     * Attributes.
-     *
-     * @var array
-     * 
-     * @author Roland Lehmann <rlehmann@pixeltricks.de>
-     * @since 31.01.2012
-     */
-    public static $db = array(
-        'paypalInfotextCheckout' => 'VarChar(255)'
-    );
-    
-    /**
      * 1:1 or 1:n relationships.
      *
      * @var array
-     * 
-     * @author Roland Lehmann <rlehmann@pixeltricks.de>
-     * @since 31.01.2012
      */
     public static $has_one = array(
         'SilvercartPaymentPaypal' => 'SilvercartPaymentPaypal'
@@ -93,26 +78,5 @@ class SilvercartPaymentPaypalLanguage extends SilvercartPaymentMethodLanguage {
 
     }
     
-    /**
-     * Field labels for display in tables.
-     *
-     * @param boolean $includerelations A boolean value to indicate if the labels returned include relation fields
-     *
-     * @return array
-     *
-     * @author Roland Lehmann <rlehmann@pixeltricks.de>
-     * @copyright 2012 pixeltricks GmbH
-     * @since 31.01.2012
-     */
-    public function fieldLabels($includerelations = true) {
-        $fieldLabels = array_merge(
-                parent::fieldLabels($includerelations),             array(
-            'paypalInfotextCheckout' => _t('SilvercartPaymentPaypal.INFOTEXT_CHECKOUT')
-                )
-        );
-
-        $this->extend('updateFieldLabels', $fieldLabels);
-        return $fieldLabels;
-    }
 }
 

@@ -26,9 +26,10 @@
  *
  * @package Silvercart
  * @subpackage Payment_Paypal
- * @author Sascha Koehler <skoehler@pixeltricks.de>
- * @copyright 2010 pixeltricks GmbH
- * @since 09.11.2010
+ * @author Sascha Koehler <skoehler@pixeltricks.de>,
+ *         Sebastian Diel <sdiel@pixeltricks.de>
+ * @since 01.07.2013
+ * @copyright 2013 pixeltricks GmbH
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  */
 class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
@@ -58,15 +59,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         'CanceledOrderStatus' => 'Int',
         'PendingOrderStatus' => 'Int',
         'RefundedOrderStatus' => 'Int'
-    );
-    
-    /**
-     * Casting properties
-     *
-     * @var array
-     */
-    public static $casting = array(
-        'paypalInfotextCheckout' => 'VarChar(255)'
     );
     
     /**
@@ -167,22 +159,6 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         'Pending',
         'Created'
     );
-    
-    /**
-     * getter for the multilingual attribute paypalInfotextCheckout
-     *
-     * @return string 
-     * 
-     * @author Roland Lehmann <rlehmann@pixeltricks.de>
-     * @since 31.01.2012
-     */
-    public function getpaypalInfotextCheckout() {
-        $text = '';
-        if ($this->getLanguage()) {
-            $text = $this->getLanguage()->paypalInfotextCheckout;
-        }
-        return $text;
-    }
 
     /**
      * i18n for field labels
@@ -190,32 +166,41 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
      *
      * @return array
-     * @author Roland Lehmann <rlehmann@pixeltricks.de>
-     * @since 27.02.2011
-     * @copyright 2010 pixeltricks GmbH
+     * @author Roland Lehmann <rlehmann@pixeltricks.de>,
+     *         Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 01.07.2013
      */
     public function fieldLabels($includerelations = true) {
-        $fields = parent::fieldLabels($includerelations);
-        $fields['paypalSharedSecret'] = _t('SilvercartPaymentPaypal.SHARED_SECRET', 'shared secret for secure communication', null, 'Shared Secret zur Absicherung der Kommunikation');
-        $fields['paypalCheckoutUrl_Dev'] = _t('SilvercartPaymentPaypal.CHECKOUT_URL', 'URL to the paypal checkout', null, 'URL zum Paypal Checkout');
-        $fields['paypalCheckoutUrl_Live'] = _t('SilvercartPaymentPaypal.CHECKOUT_URL');
-        $fields['paypalApiUsername_Dev'] = _t('SilvercartPaymentPaypal.API_USERNAME', 'API username', null, 'API Benutzername');
-        $fields['paypalApiUsername_Live'] = _t('SilvercartPaymentPaypal.API_USERNAME');
-        $fields['paypalApiPassword_Dev'] = _t('SilvercartPaymentPaypal.API_PASSWORD', 'API password', null, 'API Passwort');
-        $fields['paypalApiPassword_Live'] = _t('SilvercartPaymentPaypal.API_PASSWORD');
-        $fields['paypalApiSignature_Dev'] = _t('SilvercartPaymentPaypal.API_SIGNATURE', 'API signature');
-        $fields['paypalApiSignature_Live'] = _t('SilvercartPaymentPaypal.API_SIGNATURE');
-        $fields['paypalApiVersion_Dev'] = _t('SilvercartPaymentPaypal.API_VERSION', 'API version');
-        $fields['paypalApiVersion_Live'] = _t('SilvercartPaymentPaypal.API_VERSION');
-        $fields['paypalNvpApiServerUrl_Dev'] = _t('SilvercartPaymentPaypal.URL_API_NVP', 'URL to the paypal NVP API server', null, 'URL zum Paypal NVP API Server');
-        $fields['paypalNvpApiServerUrl_Live'] = _t('SilvercartPaymentPaypal.URL_API_NVP');
-        $fields['paypalSoapApiServerUrl_Dev'] = _t('SilvercartPaymentPaypal.URL_API_SOAP', 'URL to the paypal SOAP API server', null, 'URL zum Paypal SOAP API Server');
-        $fields['paypalSoapApiServerUrl_Live'] = _t('SilvercartPaymentPaypal.URL_API_SOAP');
-        $fields['paypalInfotextCheckout'] = _t('SilvercartPaymentPaypal.INFOTEXT_CHECKOUT', 'payment via paypal', null, 'Die Zahlung erfolgt per Paypal');
-        $fields['PaidOrderStatus'] = _t('SilvercartPaymentPaypal.ORDERSTATUS_PAYED', 'orderstatus for notification "payed"', null, 'Bestellstatus für Meldung "bezahlt"');
-        $fields['CanceledOrderStatus'] = _t('SilvercartPaymentPaypal.ORDERSTATUS_CANCELED', 'orderstatus for notification "canceled"', null, 'Bestellstatus für Meldung "abgebrochen"');
-        $fields['PendingOrderStatus'] = _t('SilvercartPaymentPaypal.ORDERSTATUS_PENDING', 'orderstatus for notification "pending"', null, 'Bestellstatus für Meldung "in der Schwebe"');
-        $fields['RefundedOrderStatus'] = _t('SilvercartPaymentPaypal.ORDERSTATUS_REFUNDED', 'orderstatus for notification "refunded"', null, 'Bestellstatus für Meldung "zurückerstattet"');
+        $fields = array_merge(
+                parent::fieldLabels($includerelations),
+                array(
+                    'paypalSharedSecret'            => _t('SilvercartPaymentPaypal.SHARED_SECRET', 'shared secret for secure communication', null, 'Shared Secret zur Absicherung der Kommunikation'),
+                    'paypalCheckoutUrl_Dev'         => _t('SilvercartPaymentPaypal.CHECKOUT_URL', 'URL to the paypal checkout', null, 'URL zum Paypal Checkout'),
+                    'paypalCheckoutUrl_Live'        => _t('SilvercartPaymentPaypal.CHECKOUT_URL'),
+                    'paypalApiUsername_Dev'         => _t('SilvercartPaymentPaypal.API_USERNAME', 'API username', null, 'API Benutzername'),
+                    'paypalApiUsername_Live'        => _t('SilvercartPaymentPaypal.API_USERNAME'),
+                    'paypalApiPassword_Dev'         => _t('SilvercartPaymentPaypal.API_PASSWORD', 'API password', null, 'API Passwort'),
+                    'paypalApiPassword_Live'        => _t('SilvercartPaymentPaypal.API_PASSWORD'),
+                    'paypalApiSignature_Dev'        => _t('SilvercartPaymentPaypal.API_SIGNATURE', 'API signature'),
+                    'paypalApiSignature_Live'       => _t('SilvercartPaymentPaypal.API_SIGNATURE'),
+                    'paypalApiVersion_Dev'          => _t('SilvercartPaymentPaypal.API_VERSION', 'API version'),
+                    'paypalApiVersion_Live'         => _t('SilvercartPaymentPaypal.API_VERSION'),
+                    'paypalNvpApiServerUrl_Dev'     => _t('SilvercartPaymentPaypal.URL_API_NVP', 'URL to the paypal NVP API server', null, 'URL zum Paypal NVP API Server'),
+                    'paypalNvpApiServerUrl_Live'    => _t('SilvercartPaymentPaypal.URL_API_NVP'),
+                    'paypalSoapApiServerUrl_Dev'    => _t('SilvercartPaymentPaypal.URL_API_SOAP', 'URL to the paypal SOAP API server', null, 'URL zum Paypal SOAP API Server'),
+                    'paypalSoapApiServerUrl_Live'   => _t('SilvercartPaymentPaypal.URL_API_SOAP'),
+                    'PaidOrderStatus'               => _t('SilvercartPaymentPaypal.ORDERSTATUS_PAYED', 'orderstatus for notification "payed"', null, 'Bestellstatus für Meldung "bezahlt"'),
+                    'CanceledOrderStatus'           => _t('SilvercartPaymentPaypal.ORDERSTATUS_CANCELED', 'orderstatus for notification "canceled"', null, 'Bestellstatus für Meldung "abgebrochen"'),
+                    'PendingOrderStatus'            => _t('SilvercartPaymentPaypal.ORDERSTATUS_PENDING', 'orderstatus for notification "pending"', null, 'Bestellstatus für Meldung "in der Schwebe"'),
+                    'RefundedOrderStatus'           => _t('SilvercartPaymentPaypal.ORDERSTATUS_REFUNDED', 'orderstatus for notification "refunded"', null, 'Bestellstatus für Meldung "zurückerstattet"'),
+                    'TabOrderStatus'                => _t('SilvercartPaymentPaypal.ATTRIBUTED_ORDERSTATUS', 'attributed order status', null, 'Zuordnung Bestellstatus'),
+                    'TabApiDev'                     => _t('SilvercartPaymentPaypal.API_DEVELOPMENT_MODE', 'API development mode', null, 'API Entwicklungsmodus'),
+                    'TabApiLive'                    => _t('SilvercartPaymentPaypal.API_LIVE_MODE', 'API live mode'),
+                    'TabUrlsDev'                    => _t('SilvercartPaymentPaypal.URLS_DEV_MODE', 'URLs of dev mode', null, 'URLs Entwicklungsmodus'),
+                    'TabUrlsLive'                   => _t('SilvercartPaymentPaypal.URLS_LIVE_MODE', 'URLs of live mode', null, 'URLs Livemodus'),
+                    'SilvercartPaymentPaypalLanguages'  => _t('SilvercartPaymentPaypalLanguages.PLURALNAME'),
+                )
+        );
         return $fields;
     }
 
@@ -224,34 +209,33 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @param mixed $params optional
      *
-     * @return FieldSet
+     * @return FieldList
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 12.11.2010
+     * @author Sascha Koehler <skoehler@pixeltricks.de>,
+     *         Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 01.07.2013
      */
     public function getCMSFields($params = null) {
         $fields = parent::getCMSFieldsForModules($params);
-        $fieldLabels = self::$field_labels;
 
         $tabApi = new Tab('PaypalAPI');
         $tabUrls = new Tab('PaypalURLs');
-        $tabOrderStatus = new Tab('OrderStatus', _t('SilvercartPaymentPaypal.ATTRIBUTED_ORDERSTATUS', 'attributed order status', null, 'Zuordnung Bestellstatus'));
+        $tabOrderStatus = new Tab('OrderStatus', $this->fieldLabel('TabOrderStatus'));
 
-        $fields->fieldByName('Sections')->push($tabApi);
-        $fields->fieldByName('Sections')->push($tabUrls);
-        $fields->fieldByName('Sections')->push($tabOrderStatus);
+        $fields->fieldByName('Root')->push($tabApi);
+        $fields->fieldByName('Root')->push($tabUrls);
+        $fields->fieldByName('Root')->push($tabOrderStatus);
 
         // basic settings -------------------------------------------------
         $fields->addFieldToTab(
-                'Sections.Basic',
-                new TextField('paypalSharedSecret', _t('SilvercartPaymentPaypal.SHARED_SECRET'))
+                'Root.Basic',
+                new TextField('paypalSharedSecret', $this->fieldLabel('paypalSharedSecret'))
         );
 
         // API Tabset ---------------------------------------------------------
-        $tabApiTabset = new TabSet('APIOptions');
-        $tabApiTabDev = new Tab(_t('SilvercartPaymentPaypal.API_DEVELOPMENT_MODE', 'API development mode', null, 'API Entwicklungsmodus'));
-        $tabApiTabLive = new Tab(_t('SilvercartPaymentPaypal.API_LIVE_MODE', 'API live mode'));
+        $tabApiTabset   = new TabSet('APIOptions');
+        $tabApiTabDev   = new Tab($this->fieldLabel('TabApiDev'));
+        $tabApiTabLive  = new Tab($this->fieldLabel('TabApiLive'));
 
         // API Tabs -----------------------------------------------------------
         $tabApiTabset->push($tabApiTabDev);
@@ -260,9 +244,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $tabApi->push($tabApiTabset);
 
         // URL Tabset ---------------------------------------------------------
-        $tabUrlTabset = new TabSet('URLOptions');
-        $tabUrlTabDev = new Tab(_t('SilvercartPaymentPaypal.URLS_DEV_MODE', 'URLs of dev mode', null, 'URLs Entwicklungsmodus'));
-        $tabUrlTabLive = new Tab(_t('SilvercartPaymentPaypal.URLS_LIVE_MODE', 'URLs of live mode', null, 'URLs Livemodus'));
+        $tabUrlTabset   = new TabSet('URLOptions');
+        $tabUrlTabDev   = new Tab($this->fieldLabel('TabUrlsDev'));
+        $tabUrlTabLive  = new Tab($this->fieldLabel('TabUrlsLive'));
 
         // URL Tabs -----------------------------------------------------------
         $tabUrlTabset->push($tabUrlTabDev);
@@ -272,53 +256,56 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
 
         // API Tab Dev fields -------------------------------------------------
         $tabApiTabDev->setChildren(
-                new FieldSet(
-                        new TextField('paypalApiUsername_Dev', _t('SilvercartPaymentPaypal.API_USERNAME')),
-                        new TextField('paypalApiPassword_Dev', _t('SilvercartPaymentPaypal.API_PASSWORD')),
-                        new TextField('paypalApiSignature_Dev', _t('SilvercartPaymentPaypal.API_SIGNATURE')),
-                        new TextField('paypalApiVersion_Dev', _t('SilvercartPaymentPaypal.API_VERSION'))
+                new FieldList(
+                        new TextField('paypalApiUsername_Dev',  $this->fieldLabel('paypalApiUsername_Dev')),
+                        new TextField('paypalApiPassword_Dev',  $this->fieldLabel('paypalApiPassword_Dev')),
+                        new TextField('paypalApiSignature_Dev', $this->fieldLabel('paypalApiSignature_Dev')),
+                        new TextField('paypalApiVersion_Dev',   $this->fieldLabel('paypalApiVersion_Dev'))
                 )
         );
 
         // API Tab Live fields ------------------------------------------------
         $tabApiTabLive->setChildren(
-                new FieldSet(
-                        new TextField('paypalApiUsername_Live', _t('SilvercartPaymentPaypal.API_USERNAME')),
-                        new TextField('paypalApiPassword_Live', _t('SilvercartPaymentPaypal.API_PASSWORD')),
-                        new TextField('paypalApiSignature_Live', _t('SilvercartPaymentPaypal.API_SIGNATURE')),
-                        new TextField('paypalApiVersion_Live', _t('SilvercartPaymentPaypal.API_VERSION'))
+                new FieldList(
+                        new TextField('paypalApiUsername_Live',     $this->fieldLabel('paypalApiUsername_Live')),
+                        new TextField('paypalApiPassword_Live',     $this->fieldLabel('paypalApiPassword_Live')),
+                        new TextField('paypalApiSignature_Live',    $this->fieldLabel('paypalApiSignature_Live')),
+                        new TextField('paypalApiVersion_Live',      $this->fieldLabel('paypalApiVersion_Live'))
                 )
         );
 
         // URL Tab Dev fields -------------------------------------------------
         $tabUrlTabDev->setChildren(
-                new FieldSet(
-                        new TextField('paypalCheckoutUrl_Dev', _t('SilvercartPaymentPaypal.CHECKOUT_URL')),
-                        new TextField('paypalNvpApiServerUrl_Dev', _t('SilvercartPaymentPaypal.URL_API_NVP')),
-                        new TextField('paypalSoapApiServerUrl_Dev', _t('SilvercartPaymentPaypal.URL_API_SOAP'))
+                new FieldList(
+                        new TextField('paypalCheckoutUrl_Dev',      $this->fieldLabel('paypalCheckoutUrl_Dev')),
+                        new TextField('paypalNvpApiServerUrl_Dev',  $this->fieldLabel('paypalNvpApiServerUrl_Dev')),
+                        new TextField('paypalSoapApiServerUrl_Dev', $this->fieldLabel('paypalSoapApiServerUrl_Dev'))
                 )
         );
 
         // URL Tab Live fields ------------------------------------------------
         $tabUrlTabLive->setChildren(
-                new FieldSet(
-                        new TextField('paypalCheckoutUrl_Live', _t('SilvercartPaymentPaypal.CHECKOUT_URL')),
-                        new TextField('paypalNvpApiServerUrl_Live', _t('SilvercartPaymentPaypal.URL_API_NVP')),
-                        new TextField('paypalSoapApiServerUrl_Live', _t('SilvercartPaymentPaypal.URL_API_SOAP'))
+                new FieldList(
+                        new TextField('paypalCheckoutUrl_Live',         $this->fieldLabel('paypalCheckoutUrl_Live')),
+                        new TextField('paypalNvpApiServerUrl_Live',     $this->fieldLabel('paypalNvpApiServerUrl_Live')),
+                        new TextField('paypalSoapApiServerUrl_Live',    $this->fieldLabel('paypalSoapApiServerUrl_Live'))
                 )
         );
 
         // Bestellstatus Tab fields -------------------------------------------
         $OrderStatus = DataObject::get('SilvercartOrderStatus');
         $tabOrderStatus->setChildren(
-                new FieldSet(
-                        new DropdownField('PaidOrderStatus', _t('SilvercartPaymentPaypal.ORDERSTATUS_PAYED'), $OrderStatus->map('ID', 'Title'), $this->PaidOrderStatus),
-                        new DropdownField('CanceledOrderStatus', _t('SilvercartPaymentPaypal.ORDERSTATUS_CANCELED'), $OrderStatus->map('ID', 'Title'), $this->CanceledOrderStatus),
-                        new DropdownField('PendingOrderStatus', _t('SilvercartPaymentPaypal.ORDERSTATUS_PENDING'), $OrderStatus->map('ID', 'Title'), $this->PendingOrderStatus),
-                        new DropdownField('RefundedOrderStatus', _t('SilvercartPaymentPaypal.ORDERSTATUS_REFUNDED'), $OrderStatus->map('ID', 'Title'), $this->RefundedOrderStatus)
+                new FieldList(
+                        new DropdownField('PaidOrderStatus',        $this->fieldLabel('PaidOrderStatus'),       $OrderStatus->map('ID', 'Title'), $this->PaidOrderStatus),
+                        new DropdownField('CanceledOrderStatus',    $this->fieldLabel('CanceledOrderStatus'),   $OrderStatus->map('ID', 'Title'), $this->CanceledOrderStatus),
+                        new DropdownField('PendingOrderStatus',     $this->fieldLabel('PendingOrderStatus'),    $OrderStatus->map('ID', 'Title'), $this->PendingOrderStatus),
+                        new DropdownField('RefundedOrderStatus',    $this->fieldLabel('RefundedOrderStatus'),   $OrderStatus->map('ID', 'Title'), $this->RefundedOrderStatus)
                 )
         );
-        $fields->addFieldToTab('Sections.Translations', new ComplexTableField($this, 'SilvercartPaymentPaypalLanguages', 'SilvercartPaymentPaypalLanguage'));
+        
+        $translations = new GridField('SilvercartPaymentPaypalLanguages', $this->fieldLabel('SilvercartPaymentPaypalLanguages'), $this->SilvercartPaymentPaypalLanguages(), SilvercartGridFieldConfig_ExclusiveRelationEditor::create());
+        $fields->addFieldToTab('Root.Translations', $translations);
+        //$fields->addFieldToTab('Root.Translations', new ComplexTableField($this, 'SilvercartPaymentPaypalLanguages', 'SilvercartPaymentPaypalLanguage'));
         return $fields;
     }
 
