@@ -1,0 +1,42 @@
+ru:
+  SilvercartHandlingCostPaypal:
+    PLURALNAME: "пошлины "
+    SINGULARNAME: "пошлина"
+  SilvercartOrderStatus:
+    PAYPAL_CANCELED: ""
+    PAYPAL_ERROR: ""
+    PAYPAL_PENDING: ""
+    PAYPAL_REFUNDING: ""
+    PAYPAL_SUCCESS: ""
+  SilvercartPaymentPaypal:
+    API_DEVELOPMENT_MODE: ""
+    API_LIVE_MODE: ""
+    API_PASSWORD: ""
+    API_SIGNATURE: ""
+    API_USERNAME: ""
+    API_VERSION: ""
+    ATTRIBUTED_ORDERSTATUS: ""
+    CHECKOUT_URL: ""
+    ENTERDATAATPAYPAL: "способ оплаты – PayPal"
+    INFOTEXT_CHECKOUT: "оплата производится методом PayPal"
+    ORDERSTATUS_CANCELED: ""
+    ORDERSTATUS_PAYED: ""
+    ORDERSTATUS_PENDING: ""
+    ORDERSTATUS_REFUNDED: ""
+    ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE: ""
+    PLURALNAME: "Способы оплаты"
+    SHARED_SECRET: ""
+    SINGULARNAME: "способ оплаты"
+    URLS_DEV_MODE: ""
+    URLS_LIVE_MODE: ""
+    URL_API_NVP: ""
+    URL_API_SOAP: ""
+  SilvercartPaymentPaypalLanguage:
+    PLURALNAME: "Übersetzungen"
+    SINGULARNAME: "Übersetzung"
+  SilvercartPaymentPaypalNotification:
+    PLURALNAME: ""
+    SINGULARNAME: ""
+  SilvercartPaymentPaypalOrder:
+    PLURALNAME: ""
+    SINGULARNAME: ""

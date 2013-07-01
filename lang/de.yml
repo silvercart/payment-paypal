@@ -1,0 +1,42 @@
+de:
+  SilvercartHandlingCostPaypal:
+    PLURALNAME: "Gebühren"
+    SINGULARNAME: "Gebühr"
+  SilvercartOrderStatus:
+    PAYPAL_CANCELED: "PayPal abgebrochen"
+    PAYPAL_ERROR: "PayPal Fehler"
+    PAYPAL_PENDING: "PayPal in Bearbeitung"
+    PAYPAL_REFUNDING: "PayPal Rückerstattung"
+    PAYPAL_SUCCESS: "Zahlung ist durch PayPal genehmigt"
+  SilvercartPaymentPaypal:
+    API_DEVELOPMENT_MODE: "API Entwicklungsmodus"
+    API_LIVE_MODE: "API Live Modus"
+    API_PASSWORD: "API Passwort"
+    API_SIGNATURE: "API Signatur"
+    API_USERNAME: "API Benutzername"
+    API_VERSION: "API Version"
+    ATTRIBUTED_ORDERSTATUS: "Zuordnung Bestellstatus"
+    CHECKOUT_URL: "URL zum PayPal Checkout"
+    ENTERDATAATPAYPAL: "Zahlung bei PayPal"
+    INFOTEXT_CHECKOUT: "Die Zahlung erfolgt per PayPal"
+    ORDERSTATUS_CANCELED: "Bestellstatus für Meldung \"abgebrochen\""
+    ORDERSTATUS_PAYED: "Bestellstatus für Meldung \"bezahlt\""
+    ORDERSTATUS_PENDING: "Bestellstatus für Meldung \"in der Schwebe\""
+    ORDERSTATUS_REFUNDED: "Bestellstatus für Meldung \"zurückerstattet\""
+    ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE: "Kaufen & weiter zur Bezahlung bei PayPal"
+    PLURALNAME: "Bezahlarten"
+    SHARED_SECRET: "Shared Secret zur Absicherung der Kommunikation"
+    SINGULARNAME: "Bezahlart"
+    URLS_DEV_MODE: "URLs Entwicklungsmodus"
+    URLS_LIVE_MODE: "URLs Livemodus"
+    URL_API_NVP: "URL zum PayPal NVP API Server"
+    URL_API_SOAP: "URL zum PayPal SOAP API Server"
+  SilvercartPaymentPaypalLanguage:
+    PLURALNAME: "Übersetzungen der Zahlart PayPal"
+    SINGULARNAME: "Übersetzung der Zahlart PayPal"
+  SilvercartPaymentPaypalNotification:
+    PLURALNAME: "Zahlungsbenachrichtigungen"
+    SINGULARNAME: "Zahlungsbenachrichtigung"
+  SilvercartPaymentPaypalOrder:
+    PLURALNAME: "PayPal Bestellungen"
+    SINGULARNAME: "PayPal Bestellung"

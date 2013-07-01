@@ -1,0 +1,42 @@
+en:
+  SilvercartHandlingCostPaypal:
+    PLURALNAME: "Fees"
+    SINGULARNAME: "Fee"
+  SilvercartOrderStatus:
+    PAYPAL_CANCELED: "PayPal canceled"
+    PAYPAL_ERROR: "PayPal error"
+    PAYPAL_PENDING: "PayPal pending"
+    PAYPAL_REFUNDING: "PayPal refunding"
+    PAYPAL_SUCCESS: "Payment approved by PayPal"
+  SilvercartPaymentPaypal:
+    API_DEVELOPMENT_MODE: "API development mode"
+    API_LIVE_MODE: "API live mode"
+    API_PASSWORD: "API password"
+    API_SIGNATURE: "API signature"
+    API_USERNAME: "API username"
+    API_VERSION: "API version"
+    ATTRIBUTED_ORDERSTATUS: "attributed order status"
+    CHECKOUT_URL: "URL to the PayPal checkout"
+    ENTERDATAATPAYPAL: "Payment at PayPal"
+    INFOTEXT_CHECKOUT: "payment via PayPal"
+    ORDERSTATUS_CANCELED: "orderstatus for notification \"canceled\""
+    ORDERSTATUS_PAYED: "orderstatus for notification \"payed\""
+    ORDERSTATUS_PENDING: "orderstatus for notification \"pending\""
+    ORDERSTATUS_REFUNDED: "orderstatus for notification \"refunded\""
+    ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE: "Proceed to payment via PayPal"
+    PLURALNAME: "payment methods"
+    SHARED_SECRET: "shared secret for secure communication"
+    SINGULARNAME: "payment method"
+    URLS_DEV_MODE: "URLs of dev mode"
+    URLS_LIVE_MODE: "URLs of live mode"
+    URL_API_NVP: "URL to the PayPal NVP API server"
+    URL_API_SOAP: "URL to the PayPal SOAP API server"
+  SilvercartPaymentPaypalLanguage:
+    PLURALNAME: "Translations of the payment method PayPal"
+    SINGULARNAME: "Translation of the payment method PayPal"
+  SilvercartPaymentPaypalNotification:
+    PLURALNAME: "Silvercart Payment Paypal Notifications"
+    SINGULARNAME: "Silvercart Payment Paypal Notification"
+  SilvercartPaymentPaypalOrder:
+    PLURALNAME: "Silvercart Payment Paypal Orders"
+    SINGULARNAME: "Silvercart Payment Paypal Order"
