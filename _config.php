@@ -23,6 +23,7 @@
  */
 DataObject::add_extension('SilvercartPaymentPaypal', 'SilvercartDataObjectMultilingualDecorator');
 
+/**
 // ----------------------------------------------------------------------------
 // Blacklists for SilvercartRestfulServer
 // ----------------------------------------------------------------------------
@@ -50,3 +51,4 @@ SilvercartRestfulServer::addApiAccessBlackListFields(
          'RefundedOrderStatus',
     )
 );
+/**/
