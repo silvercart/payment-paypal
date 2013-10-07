@@ -609,9 +609,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return bool
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 24.11.2010
+     * @author Sascha Koehler <skoehler@pixeltricks.de>,
+     *         Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 07.10.2013
      */
     public function isValidPaypalIPNCall() {
         $requestIsFromPaypal = false;
@@ -629,10 +629,12 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         }
 
         // Zusammenfasste Variablen an Paypal zuruecksenden.
-        $header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
+        $header .= "POST /cgi-bin/webscr HTTP/1.1\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
-
+        $header .= "Content-Length: " . strlen($req) . "\r\n";
+        $header .= "Host: www.paypal.com\r\n"; 
+        $header .= "Connection: close\r\n\r\n";
+        
         if ($this->mode == 'Live') {
             $url = 'ssl://www.paypal.com';
         } else {
