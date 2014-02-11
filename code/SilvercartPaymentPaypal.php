@@ -464,11 +464,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $itemAmountNet      = round((float) $this->order->getPriceNet()->getAmount(), 2);
         $shippingAmt        = round((float) $this->order->HandlingCostShipmentAmount, 2);
         $handlingAmt        = round((float) $this->order->HandlingCostPaymentAmount, 2);
-        $taxTotal           = 0.0;
-        foreach ($this->order->getTaxRatesWithoutFees(true, true) as $taxRate) {
-            $taxTotal += $taxRate->Amount->getAmount();
-        }
-        $taxTotal = round($taxTotal, 2);
+        $taxTotal           = $this->order->getPositionsTaxAmount();
 
         $this->Log(
                 'doExpressCheckoutPayment: Amounts',
