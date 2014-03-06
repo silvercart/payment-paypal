@@ -24,15 +24,15 @@
  * @ignore
  */
 
-i18n::include_locale_file('silvercart_payment_payal', 'en_US');
+
 
 global $lang;
 
-if (array_key_exists('de_DE', $lang) && is_array($lang['de_DE'])) {
-    $lang['de_DE'] = array_merge($lang['en_US'], $lang['de_DE']);
-} else {
-    $lang['de_DE'] = $lang['en_US'];
-}
+
+
+
+
+
 
 $lang['de_DE']['SilvercartHandlingCostPaypal']['PLURALNAME']    = 'Gebühren';
 $lang['de_DE']['SilvercartHandlingCostPaypal']['SINGULARNAME']  = 'Gebühr';
@@ -65,6 +65,7 @@ $lang['de_DE']['SilvercartPaymentPaypal']['URLS_DEV_MODE']          = 'URLs Entw
 $lang['de_DE']['SilvercartPaymentPaypal']['URLS_LIVE_MODE']         = 'URLs Livemodus';
 $lang['de_DE']['SilvercartPaymentPaypal']['URL_API_NVP']            = 'URL zum PayPal NVP API Server';
 $lang['de_DE']['SilvercartPaymentPaypal']['URL_API_SOAP']           = 'URL zum PayPal SOAP API Server';
+$lang['de_DE']['SilvercartPaymentPaypal']['PaypalApiData']          = 'PayPal Zugangsdaten';
 
 $lang['de_DE']['SilvercartPaymentPaypalLanguage']['SINGULARNAME'] = 'Übersetzung der Zahlart PayPal';
 $lang['de_DE']['SilvercartPaymentPaypalLanguage']['PLURALNAME'] = 'Übersetzungen der Zahlart PayPal';

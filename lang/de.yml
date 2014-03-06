@@ -25,6 +25,7 @@ de:
     ORDERSTATUS_REFUNDED: "Bestellstatus für Meldung \"zurückerstattet\""
     ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE: "Kaufen & weiter zur Bezahlung bei PayPal"
     PLURALNAME: "Bezahlarten"
+    PaypalApiData: "PayPal Zugangsdaten"
     SHARED_SECRET: "Shared Secret zur Absicherung der Kommunikation"
     SINGULARNAME: "Bezahlart"
     URLS_DEV_MODE: "URLs Entwicklungsmodus"
