@@ -895,8 +895,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return string|boolean false
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>, Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 31.08.2012
+     * @author Sascha Koehler <skoehler@pixeltricks.de>,
+     *         Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 13.03.2014
      */
     public function fetchPaypalToken($checkoutData = null) {
         if (is_null($checkoutData)) {
@@ -953,7 +954,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $positionTaxAmtTotal    = $positionTaxAmt * $shoppingCartPosition->Quantity;
             $taxAmtTotal           += round($positionTaxAmtTotal, 2);
 
-            $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount] = $shoppingCartPosition->Quantity.' x '.$shoppingCartPosition->getTitle();
+            $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount] = $shoppingCartPosition->Quantity.' x ' . strip_tags($shoppingCartPosition->getTitle());
 
             if (method_exists($shoppingCartPosition, 'getShortDescription')) {
                 $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount] = substr($shoppingCartPosition->getShortDescription(), 0, 50);
