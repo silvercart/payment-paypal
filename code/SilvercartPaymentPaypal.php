@@ -337,9 +337,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return void
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 16.11.2010
+     * @author Sebastian Diel <sdiel@pixeltricks.de>,
+     *         Sascha Koehler <skoehler@pixeltricks.de>
+     * @since 09.04.2014
      */
     public function processPaymentBeforeOrder() {
        
@@ -354,9 +354,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         $this->controller->setCurrentStep($this->controller->getNextStep());
 
         if ($this->mode == 'Live') {
-            Director::redirect($this->paypalCheckoutUrl_Live . 'cmd=_express-checkout&token=' . $token);
+            Controller::curr()->redirect($this->paypalCheckoutUrl_Live . 'cmd=_express-checkout&token=' . $token);
         } else {
-            Director::redirect($this->paypalCheckoutUrl_Dev . 'cmd=_express-checkout&token=' . $token);
+            Controller::curr()->redirect($this->paypalCheckoutUrl_Dev . 'cmd=_express-checkout&token=' . $token);
         }
     }
 
@@ -369,8 +369,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return void
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>>, Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 05.02.2013
+     * @author Sebastian Diel <sdiel@pixeltricks.de>,
+     *         Sascha Koehler <skoehler@pixeltricks.de>
+     * @since 09.04.2014
      */
     public function processReturnJumpFromPaymentProvider() {
         if (!isset($_REQUEST['token'])) {
@@ -394,7 +395,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $this->controller->removeCompletedStep(6);
             $this->controller->removeCompletedStep(5);
             $this->controller->setCurrentStep(5);
-            Director::redirect($this->controller->Link(), 302);
+            Controller::curr()->redirect($this->controller->Link(), 302);
         }
     }
 
