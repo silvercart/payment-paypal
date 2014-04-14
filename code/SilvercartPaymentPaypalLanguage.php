@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2013 pixeltricks GmbH
+ * Copyright 2014 pixeltricks GmbH
  *
  * This file is part of SilverCart.
  *
@@ -34,17 +34,13 @@ class SilvercartPaymentPaypalLanguage extends SilvercartPaymentMethodLanguage {
      * Returns the translated singular name of the object. If no translation exists
      * the class name will be returned.
      * 
-     * @return string The objects singular name 
+     * @return string
      * 
-     * @author Roland Lehmann <rlehmann@pixeltricks.de>
-     * @since 31.01.2012
+     * @author Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 14.04.2014
      */
     public function singular_name() {
-        if (_t('SilvercartPaymentPaypalLanguage.SINGULARNAME')) {
-            return _t('SilvercartPaymentPaypalLanguage.SINGULARNAME');
-        } else {
-            return parent::singular_name();
-        } 
+        SilvercartTools::singular_name_for($this);
     }
 
 
@@ -52,18 +48,13 @@ class SilvercartPaymentPaypalLanguage extends SilvercartPaymentMethodLanguage {
      * Returns the translated plural name of the object. If no translation exists
      * the class name will be returned.
      * 
-     * @return string the objects plural name
+     * @return string
      * 
-     * @author Roland Lehmann <rlehmann@pixeltricks.de>
-     * @since 31.01.2012
+     * @author Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 14.04.2014
      */
     public function plural_name() {
-        if (_t('SilvercartPaymentPaypalLanguage.PLURALNAME')) {
-            return _t('SilvercartPaymentPaypalLanguage.PLURALNAME');
-        } else {
-            return parent::plural_name();
-        }
-
+        SilvercartTools::plural_name_for($this);
     }
     
 }
