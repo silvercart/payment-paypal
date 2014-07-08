@@ -873,8 +873,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return string|boolean false
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>, Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 31.08.2012
+     * @author Sebastian Diel <sdiel@pixeltricks.de>,
+     *         Sascha Koehler <skoehler@pixeltricks.de>
+     * @since 08.07.2014
      */
     public function fetchPaypalToken($checkoutData = null) {
         if (is_null($checkoutData)) {
@@ -954,6 +955,25 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
 
                 $itemCount++;
             }
+        }
+        // Charges and discounts for total
+        if ($this->shoppingCart->HasChargesAndDiscountsForTotal()) {
+            $addToHandlingAmount = 0;
+            $parameters['PAYMENTREQUEST_0_CUSTOM'] = '';
+            foreach ($this->shoppingCart->ChargesAndDiscountsForTotal() as $shoppingCartPosition) {
+                $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount]           = $shoppingCartPosition->Name;
+                $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount]           = '';
+                $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount]            = round((float) $shoppingCartPosition->Price->getAmount(), 2);
+                $parameters['L_PAYMENTREQUEST_0_ITEMCATEGORY'.$itemCount]   = 'Physical';
+                
+                $addToHandlingAmount += $parameters['L_PAYMENTREQUEST_0_AMT'.$itemCount];
+                $itemCount++;
+            }
+            // Charges and discounts for total are not possible as a single 
+            // position for paypal.
+            // To workaround this, the amount will be added to or reduced from
+            // item amount.
+            $parameters['PAYMENTREQUEST_0_ITEMAMT'] += $addToHandlingAmount;
         }
 
         // define optional parameters
