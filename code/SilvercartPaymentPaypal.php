@@ -339,7 +339,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @author Sebastian Diel <sdiel@pixeltricks.de>,
      *         Sascha Koehler <skoehler@pixeltricks.de>
-     * @since 09.04.2014
+     * @since 08.07.2014
      */
     public function processPaymentBeforeOrder() {
        
@@ -348,15 +348,18 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         if (!$this->errorOccured) {
             $this->saveToken($token);
         }
+        
+        if (!($token === false &&
+              $this->errorOccured)) {
+            $this->controller->addCompletedStep($this->controller->getCurrentStep());
+            $this->controller->addCompletedStep($this->controller->getNextStep());
+            $this->controller->setCurrentStep($this->controller->getNextStep());
 
-        $this->controller->addCompletedStep($this->controller->getCurrentStep());
-        $this->controller->addCompletedStep($this->controller->getNextStep());
-        $this->controller->setCurrentStep($this->controller->getNextStep());
-
-        if ($this->mode == 'Live') {
-            Controller::curr()->redirect($this->paypalCheckoutUrl_Live . 'cmd=_express-checkout&token=' . $token);
-        } else {
-            Controller::curr()->redirect($this->paypalCheckoutUrl_Dev . 'cmd=_express-checkout&token=' . $token);
+            if ($this->mode == 'Live') {
+                Controller::curr()->redirect($this->paypalCheckoutUrl_Live . 'cmd=_express-checkout&token=' . $token);
+            } else {
+                Controller::curr()->redirect($this->paypalCheckoutUrl_Dev . 'cmd=_express-checkout&token=' . $token);
+            }
         }
     }
 

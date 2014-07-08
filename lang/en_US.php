@@ -66,6 +66,10 @@ $lang['en_US']['SilvercartPaymentPaypal']['URLS_LIVE_MODE']         = 'URLs of l
 $lang['en_US']['SilvercartPaymentPaypal']['URL_API_NVP']            = 'URL to the PayPal NVP API server';
 $lang['en_US']['SilvercartPaymentPaypal']['URL_API_SOAP']           = 'URL to the PayPal SOAP API server';
 $lang['en_US']['SilvercartPaymentPaypal']['PaypalApiData']          = 'PayPal login data';
+$lang['en_US']['SilvercartPaymentPaypal']['AnErrorOccurred']             = 'An error occurred';
+$lang['en_US']['SilvercartPaymentPaypal']['AnErrorOccurredText']         = 'Please <a href="{PaymentStepLink}">choose another payment method</a> or <a href="{LastStepLink}">try again</a>.<br/>When the problem occurs again <a href="{PaymentStepLink}">please choose another payment method</a>.';
+$lang['en_US']['SilvercartPaymentPaypal']['AnErrorOccurredOtherPayment'] = 'Choose another payment method';
+$lang['en_US']['SilvercartPaymentPaypal']['AnErrorOccurredTryAgain']     = 'Try again';
 
 $lang['en_US']['SilvercartPaymentPaypalLanguage']['SINGULARNAME'] = 'Translation of the payment method PayPal';
 $lang['en_US']['SilvercartPaymentPaypalLanguage']['PLURALNAME'] = 'Translations of the payment method PayPal';
