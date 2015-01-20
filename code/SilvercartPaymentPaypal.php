@@ -436,19 +436,16 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * @return boolean
      *
      * @author Sascha Koehler <skoehler@pixeltricks.de>, Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 31.08.2012
+     * @since 11.02.2014
      */
     public function doExpressCheckoutPayment() {
         // Rundungsdifferenzen beseitigen
         $cartAmountGross    = round((float) $this->order->AmountTotal->getAmount(), 2);
-        $itemAmountNet      = round((float) $this->order->getPriceNet()->getAmount(), 2);
+        $itemAmountGross    = round((float) $this->order->getPositionsPriceGross()->getAmount(), 2);
+        $itemAmountNet      = round((float) $this->order->getPositionsPriceNet()->getAmount(), 2);
         $shippingAmt        = round((float) $this->order->HandlingCostShipmentAmount, 2);
         $handlingAmt        = round((float) $this->order->HandlingCostPaymentAmount, 2);
-        $taxTotal           = 0.0;
-        foreach ($this->order->getTaxRatesWithoutFees(true, true) as $taxRate) {
-            $taxTotal += $taxRate->Amount->getAmount();
-        }
-        $taxTotal = round($taxTotal, 2);
+        $taxTotal           = $itemAmountGross - $itemAmountNet;
 
         $this->Log(
                 'doExpressCheckoutPayment: Amounts',
@@ -589,9 +586,9 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return bool
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 24.11.2010
+     * @author Sascha Koehler <skoehler@pixeltricks.de>,
+     *         Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 07.10.2013
      */
     public function isValidPaypalIPNCall() {
         $requestIsFromPaypal = false;
@@ -609,10 +606,12 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         }
 
         // Zusammenfasste Variablen an Paypal zuruecksenden.
-        $header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
+        $header .= "POST /cgi-bin/webscr HTTP/1.1\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
-
+        $header .= "Content-Length: " . strlen($req) . "\r\n";
+        $header .= "Host: www.paypal.com\r\n"; 
+        $header .= "Connection: close\r\n\r\n";
+        
         if ($this->mode == 'Live') {
             $url = 'ssl://www.paypal.com';
         } else {
@@ -935,7 +934,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             $positionTaxAmtTotal    = $positionTaxAmt * $shoppingCartPosition->Quantity;
             $taxAmtTotal           += round($positionTaxAmtTotal, 2);
 
-            $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount] = $shoppingCartPosition->Quantity.' x '.$shoppingCartPosition->getTitle();
+            $parameters['L_PAYMENTREQUEST_0_NAME'.$itemCount] = $shoppingCartPosition->Quantity.' x ' . strip_tags($shoppingCartPosition->getTitle());
 
             if (method_exists($shoppingCartPosition, 'getShortDescription')) {
                 $parameters['L_PAYMENTREQUEST_0_DESC'.$itemCount] = substr($shoppingCartPosition->getShortDescription(), 0, 50);
