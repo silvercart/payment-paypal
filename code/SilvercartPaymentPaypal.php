@@ -877,7 +877,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @author Sebastian Diel <sdiel@pixeltricks.de>,
      *         Sascha Koehler <skoehler@pixeltricks.de>
-     * @since 08.07.2014
+     * @since 29.01.2015
      */
     public function fetchPaypalToken($checkoutData = null) {
         if (is_null($checkoutData)) {
@@ -976,6 +976,20 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
             // To workaround this, the amount will be added to or reduced from
             // item amount.
             $parameters['PAYMENTREQUEST_0_ITEMAMT'] += $addToHandlingAmount;
+        }
+        
+        if (!SilvercartCustomer::currentUser()->showPricesGross()) {
+            // Add taxes as a special position when the current order is 
+            // displayed in net price mode.
+            $taxTotalList = $this->shoppingCart->getTaxTotal();
+            if ($taxTotalList instanceof ArrayList &&
+                $taxTotalList->exists()) {
+                $taxAmtTotal = 0;
+                foreach ($taxTotalList as $tax) {
+                    $taxAmtTotal += $tax->AmountRaw;
+                }
+                $parameters['PAYMENTREQUEST_0_TAXAMT'] = round((float) $taxAmtTotal, 2);
+            }
         }
 
         // define optional parameters
