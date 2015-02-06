@@ -310,6 +310,21 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
     public function getOrderConfirmationSubmitButtonTitle() {
         return _t('SilvercartPaymentPaypal.ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE');
     }
+    
+    /**
+     * Returns the PayPal checkout URL.
+     * 
+     * @return string
+     */
+    public function getPaypalCheckoutUrl() {
+        $paypalCheckoutUrl = '';
+        if ($this->mode == 'Live') {
+            $paypalCheckoutUrl = $this->paypalCheckoutUrl_Live . 'cmd=_express-checkout&token=' . $this->getPaypalToken();
+        } else {
+            $paypalCheckoutUrl = $this->paypalCheckoutUrl_Dev . 'cmd=_express-checkout&token=' . $this->getPaypalToken();
+        }
+        return $paypalCheckoutUrl;
+    }
 
     // ------------------------------------------------------------------------
     // processing methods
@@ -351,6 +366,11 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         
         if (!($token === false &&
               $this->errorOccured)) {
+            $skip = false;
+            $this->extend('skipProcessPaymentBeforeOrderRedirection', $skip);
+            if ($skip) {
+                return;
+            }
             $this->controller->addCompletedStep($this->controller->getCurrentStep());
             $this->controller->addCompletedStep($this->controller->getNextStep());
             $this->controller->setCurrentStep($this->controller->getNextStep());
