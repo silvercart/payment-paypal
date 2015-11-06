@@ -815,7 +815,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      * @copyright 2010 pixeltricks GmbH
      * @since 25.11.2010
      */
-    protected function getPaypalToken() {
+    public function getPaypalToken() {
         $token = '';
 
         if (isset($_SESSION['paypal_module_token'])) {
@@ -1067,11 +1067,11 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return array
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 17.11.2010
+     * @author Sebastian Diel <sdiel@pixeltricks.de>,
+     *         Sascha Koehler <skoehler@pixeltricks.de>
+     * @since 06.11.2015
      */
-    protected function hash_call($methodName, $nvpStr) {
+    public function hash_call($methodName, $nvpStr) {
         //setting the curl parameters.
         $ch = curl_init();
 
@@ -1176,11 +1176,11 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      *
      * @return string
      *
-     * @author Sascha Koehler <skoehler@pixeltricks.de>
-     * @copyright 2010 pixeltricks GmbH
-     * @since 17.11.2010
+     * @author Sebastian Diel <sdiel@pixeltricks.de>,
+     *         Sascha Koehler <skoehler@pixeltricks.de>
+     * @since 06.11.2015
      */
-    protected function generateUrlParams($parameters) {
+    public function generateUrlParams($parameters) {
 
         $paramString = '';
 
