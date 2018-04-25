@@ -1,0 +1,6 @@
+---
+Name: silvercart-payment-paypal-extensions
+---
+SilverCart\Paypal\Model\Paypal:
+  extensions:
+    - SilverCart\Model\Translation\TranslatableDataObjectExtension

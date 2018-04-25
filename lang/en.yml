@@ -1,14 +1,5 @@
 en:
-  SilvercartHandlingCostPaypal:
-    PLURALNAME: "Fees"
-    SINGULARNAME: "Fee"
-  SilvercartOrderStatus:
-    PAYPAL_CANCELED: "PayPal canceled"
-    PAYPAL_ERROR: "PayPal error"
-    PAYPAL_PENDING: "PayPal pending"
-    PAYPAL_REFUNDING: "PayPal refunding"
-    PAYPAL_SUCCESS: "Payment approved by PayPal"
-  SilvercartPaymentPaypal:
+  SilverCart\Paypal\Model\Paypal:
     API_DEVELOPMENT_MODE: "API development mode"
     API_LIVE_MODE: "API live mode"
     API_PASSWORD: "API password"
@@ -20,11 +11,12 @@ en:
     AnErrorOccurredOtherPayment: "Choose another payment method"
     AnErrorOccurredText: "Please <a href=\"{PaymentStepLink}\">choose another payment method</a> or <a href=\"{LastStepLink}\">try again</a>.<br/>When the problem occurs again <a href=\"{PaymentStepLink}\">please choose another payment method</a>."
     AnErrorOccurredTryAgain: "Try again"
+    AnErrorOccurredPaymentFailed: "Sorry, but your PayPal payment failed (PayPal error 10417). We canceled your order. Please try a different payment method."
     CHECKOUT_URL: "URL to the PayPal checkout"
     ENTERDATAATPAYPAL: "Payment at PayPal"
     INFOTEXT_CHECKOUT: "payment via PayPal"
     ORDERSTATUS_CANCELED: "orderstatus for notification \"canceled\""
-    ORDERSTATUS_PAYED: "orderstatus for notification \"payed\""
+    ORDERSTATUS_PAID: "orderstatus for notification \"paid\""
     ORDERSTATUS_PENDING: "orderstatus for notification \"pending\""
     ORDERSTATUS_REFUNDED: "orderstatus for notification \"refunded\""
     ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE: "Proceed to payment via PayPal"
@@ -32,16 +24,18 @@ en:
     PaypalApiData: "PayPal login data"
     SHARED_SECRET: "shared secret for secure communication"
     SINGULARNAME: "payment method"
+    StatusPaypalCanceled: "PayPal canceled"
+    StatusPaypalError: "PayPal error"
+    StatusPaypalPending: "PayPal pending"
+    StatusPaypalRefunding: "PayPal refunding"
+    StatusPaypalSuccess: "Payment approved by PayPal"
     URLS_DEV_MODE: "URLs of dev mode"
     URLS_LIVE_MODE: "URLs of live mode"
     URL_API_NVP: "URL to the PayPal NVP API server"
     URL_API_SOAP: "URL to the PayPal SOAP API server"
-  SilvercartPaymentPaypalLanguage:
-    PLURALNAME: "Translations of the payment method PayPal"
-    SINGULARNAME: "Translation of the payment method PayPal"
-  SilvercartPaymentPaypalNotification:
-    PLURALNAME: "Silvercart Payment Paypal Notifications"
-    SINGULARNAME: "Silvercart Payment Paypal Notification"
-  SilvercartPaymentPaypalOrder:
-    PLURALNAME: "Silvercart Payment Paypal Orders"
-    SINGULARNAME: "Silvercart Payment Paypal Order"
+  SilverCart\Paypal\Model\PaypalTranslation:
+    PLURALNAME: "Translations"
+    SINGULARNAME: "Translation"
+  SilverCart\Paypal\Model\PaypalOrder:
+    PLURALNAME: "PayPal Orders"
+    SINGULARNAME: "PayPal Order"

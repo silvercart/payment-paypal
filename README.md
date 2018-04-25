@@ -7,12 +7,14 @@ Enables payment via PayPal in SilverCart. SilverCart is an E-Commerce module for
 * Ramon Kupper <rkupper@pixeltricks.de>
 
 ## Requirements
-* SilverStripe 3.1
-* Translatable
-* CustomHtmlForm
-* Siteconfig
-* Widgets
-* WidgetSets
+* SilverStripe 4.0
+* SilverCart 4.0
+
+## Installation
+Installation can be done either by composer or by manually downloading the release from Github.
+
+## Via composer
+```composer require silvercart/payment-paypal 4.0.0```
 
 ## Summary
 SilverCart is an Open Source E-Commerce module for the CMS Framework SilverStripe.

@@ -1,9 +1,0 @@
-\.orig$
-\.orig\..*$
-\.chg\..*$
-\.rej$
-\.conflict\~$
-\.DS_STORE
-\.DS_Store
-^log/.*\.log$
-^nbproject/*

@@ -1,14 +1,5 @@
 de:
-  SilvercartHandlingCostPaypal:
-    PLURALNAME: "Gebühren"
-    SINGULARNAME: "Gebühr"
-  SilvercartOrderStatus:
-    PAYPAL_CANCELED: "PayPal abgebrochen"
-    PAYPAL_ERROR: "PayPal Fehler"
-    PAYPAL_PENDING: "PayPal in Bearbeitung"
-    PAYPAL_REFUNDING: "PayPal Rückerstattung"
-    PAYPAL_SUCCESS: "Zahlung ist durch PayPal genehmigt"
-  SilvercartPaymentPaypal:
+  SilverCart\Paypal\Model\Paypal:
     API_DEVELOPMENT_MODE: "API Entwicklungsmodus"
     API_LIVE_MODE: "API Live Modus"
     API_PASSWORD: "API Passwort"
@@ -20,11 +11,12 @@ de:
     AnErrorOccurredOtherPayment: "Andere Zahlungsart wählen"
     AnErrorOccurredText: "Bitte <a href=\"{PaymentStepLink}\">wählen Sie eine andere Zahlungsart</a> oder <a href=\"{LastStepLink}\">versuchen Sie es erneut</a>.<br/>Sollte dieses Problem wiederholt auftreten, <a href=\"{PaymentStepLink}\">wählen Sie bitte eine andere Zahlungsart</a>."
     AnErrorOccurredTryAgain: "Erneut versuchen"
+    AnErrorOccurredPaymentFailed: "Leider konnte uns Paypal keine positive Rückmeldung zu der Zahlungsfähigkeit Ihrer gewählten Bezahlart geben (Paypal Fehler 10417). Aus diesem Grund haben wir Ihre Bestellung storniert. Bitte wählen Sie eine andere Zahlungsart."
     CHECKOUT_URL: "URL zum PayPal Checkout"
     ENTERDATAATPAYPAL: "Zahlung bei PayPal"
     INFOTEXT_CHECKOUT: "Die Zahlung erfolgt per PayPal"
     ORDERSTATUS_CANCELED: "Bestellstatus für Meldung \"abgebrochen\""
-    ORDERSTATUS_PAYED: "Bestellstatus für Meldung \"bezahlt\""
+    ORDERSTATUS_PAID: "Bestellstatus für Meldung \"bezahlt\""
     ORDERSTATUS_PENDING: "Bestellstatus für Meldung \"in der Schwebe\""
     ORDERSTATUS_REFUNDED: "Bestellstatus für Meldung \"zurückerstattet\""
     ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE: "Kaufen & weiter zur Bezahlung bei PayPal"
@@ -32,16 +24,18 @@ de:
     PaypalApiData: "PayPal Zugangsdaten"
     SHARED_SECRET: "Shared Secret zur Absicherung der Kommunikation"
     SINGULARNAME: "Bezahlart"
+    StatusPaypalCanceled: "PayPal abgebrochen"
+    StatusPaypalError: "PayPal Fehler"
+    StatusPaypalPending: "PayPal in Bearbeitung"
+    StatusPaypalRefunding: "PayPal Rückerstattung"
+    StatusPaypalSuccess: "Zahlung ist durch PayPal genehmigt"
     URLS_DEV_MODE: "URLs Entwicklungsmodus"
     URLS_LIVE_MODE: "URLs Livemodus"
     URL_API_NVP: "URL zum PayPal NVP API Server"
     URL_API_SOAP: "URL zum PayPal SOAP API Server"
-  SilvercartPaymentPaypalLanguage:
-    PLURALNAME: "Übersetzungen der Zahlart PayPal"
-    SINGULARNAME: "Übersetzung der Zahlart PayPal"
-  SilvercartPaymentPaypalNotification:
-    PLURALNAME: "Zahlungsbenachrichtigungen"
-    SINGULARNAME: "Zahlungsbenachrichtigung"
-  SilvercartPaymentPaypalOrder:
+  SilverCart\Paypal\Model\PaypalTranslation:
+    PLURALNAME: "Übersetzungen"
+    SINGULARNAME: "Übersetzung"
+  SilverCart\Paypal\Model\PaypalOrder:
     PLURALNAME: "PayPal Bestellungen"
     SINGULARNAME: "PayPal Bestellung"
