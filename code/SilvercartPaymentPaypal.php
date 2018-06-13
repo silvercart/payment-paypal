@@ -836,7 +836,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
      */
     public function getStepConfiguration() {
         return array(
-            'silvercart_payment_paypal/templates/checkout/' => array(
+            SilvercartTools::get_module_name() . '/templates/checkout/' => array(
                 'prefix' => 'SilvercartPaymentPaypalCheckoutFormStep'
             )
         );
@@ -864,7 +864,7 @@ class SilvercartPaymentPaypal extends SilvercartPaymentMethod {
         );
         
         $paymentLogos = array(
-            'Paypal'  => '/silvercart_payment_paypal/images/horizontal_solution_PPeCheck.png',
+            'Paypal'  => '/' . SilvercartTools::get_module_name() . '/images/horizontal_solution_PPeCheck.png',
         );
 
         parent::createRequiredOrderStatus($requiredStatus);
