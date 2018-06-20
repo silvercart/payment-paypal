@@ -947,7 +947,7 @@ class Paypal extends PaymentMethod {
             'PAYMENTREQUEST_0_SHIPTOZIP'            => $shippingAddress->Postcode,
             'PAYMENTREQUEST_0_SHIPTOSTATE'          => $shippingAddress->State,
             'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'    => $shippingAddress->Country()->ISO2,
-            'PAYMENTREQUEST_0_SHIPTOPHONENUM'       => $shippingAddress->PhoneAreaCode . ' ' . $shippingAddress->Phone,
+            'PAYMENTREQUEST_0_SHIPTOPHONENUM'       => $shippingAddress->Phone,
         ];
         $this->addPositionParameters($shoppingCart, $parameters, $positionIndex);
         $this->addChargesAndDiscountsForProductsParameters($shoppingCart, $parameters, $positionIndex);
