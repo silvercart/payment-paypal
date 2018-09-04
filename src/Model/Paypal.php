@@ -1160,6 +1160,7 @@ class Paypal extends PaymentMethod {
                     // IPN call is NOT valid
                     $this->Log('isValidPaypalIPNCall', '');
                     $this->Log('isValidPaypalIPNCall', 'ERROR: payment notification was not sent by Paypal.');
+                    $this->Log('isValidPaypalIPNCall', ' - Paypal request: ' . var_export($req, true));
                     $this->Log('isValidPaypalIPNCall', ' - Paypal response: ' . var_export($res, true));
                     $this->Log('isValidPaypalIPNCall', '');
                 }
