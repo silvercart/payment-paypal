@@ -27,8 +27,8 @@ use SilverStripe\Forms\GridField\GridField;
  * @copyright 2018 pixeltricks GmbH
  * @license see license file in modules root directory
  */
-class Paypal extends PaymentMethod {
-    
+class Paypal extends PaymentMethod
+{
     const SESSION_KEY = 'Silvercart.Paypal';
     const TOKEN_SESSION_KEY = self::SESSION_KEY . '.Token';
     const PAYERID_SESSION_KEY = self::SESSION_KEY . '.PayerID';
@@ -61,7 +61,6 @@ class Paypal extends PaymentMethod {
         'PendingOrderStatus'          => 'Int',
         'RefundedOrderStatus'         => 'Int'
     ];
-    
     /**
      * Casted attributes
      *
@@ -76,7 +75,6 @@ class Paypal extends PaymentMethod {
         'SoapApiServerUrl' => 'Text',
         'ApiVersion'       => 'Text',
     ];
-
     /**
      * Default db values.
      *
@@ -92,7 +90,6 @@ class Paypal extends PaymentMethod {
         'paypalApiVersion_Dev'        => '2.3',
         'paypalApiVersion_Live'       => '2.3',
     ];
-    
     /**
      * 1:n relationships.
      *
@@ -101,28 +98,24 @@ class Paypal extends PaymentMethod {
     private static $has_many = [
         'PaypalTranslations' => PaypalTranslation::class,
     ];
-
     /**
      * DB table name
      *
      * @var string
      */
     private static $table_name = 'SilvercartPaymentPaypal';
-    
     /**
      * contains module name for display in the admin backend
      *
      * @var string
      */
     protected $moduleName = 'Paypal';
-    
     /**
      * contains name for the shared secret ID; Used by paypal at the IPN answer
      *
      * @var string
      */
     protected $sharedSecretVariableName = 'sh';
-    
     /**
      * contains all strings of the paypal answer which declare the transaction status false
      *
@@ -134,7 +127,6 @@ class Paypal extends PaymentMethod {
         'Failed',
         'Voided',
     ];
-    
     /**
      * contains all strings of the paypal answer which declare the transaction status true
      *
@@ -145,7 +137,6 @@ class Paypal extends PaymentMethod {
         'Processed',
         'Canceled-Reversal',
     ];
-    
     /**
      * contains all strings of the paypal answer of a withdrawn payment
      *
@@ -155,7 +146,6 @@ class Paypal extends PaymentMethod {
         'Refunded',
         'Reversed',
     ];
-    
     /**
      * contains all strings of the paypal answer which declare the transaction status pending
      *
@@ -177,10 +167,11 @@ class Paypal extends PaymentMethod {
      *         Roland Lehmann <rlehmann@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function fieldLabels($includerelations = true) {
+    public function fieldLabels($includerelations = true)
+    {
         $fields = array_merge(
                 parent::fieldLabels($includerelations),
-                array(
+                [
                     'paypalSharedSecret'                 => _t(self::class . '.SHARED_SECRET', 'shared secret for secure communication'),
                     'paypalCheckoutUrl'                  => _t(self::class . '.CHECKOUT_URL', 'URL to the paypal checkout'),
                     'paypalCheckoutUrl_Dev'              => _t(self::class . '.CHECKOUT_URL', 'URL to the paypal checkout'),
@@ -222,7 +213,7 @@ class Paypal extends PaymentMethod {
                     'StatusPaypalError'                  => _t(self::class . '.StatusPaypalError', 'PayPal error'),
                     'StatusPaypalCanceled'               => _t(self::class . '.StatusPaypalCanceled', 'PayPal canceled'),
                     'AnErrorOccurredPaymentFailed'       => _t(self::class . '.AnErrorOccurredPaymentFailed', 'PayPal payment failed (error 10417)'),
-                )
+                ]
         );
         return $fields;
     }
@@ -235,26 +226,27 @@ class Paypal extends PaymentMethod {
      * 
      * @return void
      */
-    protected function getFieldsForAPI($fields, $forDev = false) {
+    protected function getFieldsForAPI($fields, $forDev = false)
+    {
         $mode = 'Live';
         if ($forDev) {
             $mode = 'Dev';
         }
-        $apiGroup = new FieldGroup('APIDevGroup', '', $fields);
-        $apiGroup->push(new TextField('paypalApiUsername_' . $mode,  $this->fieldLabel('paypalApiUsername_' . $mode)));
-        $apiGroup->push(new TextField('paypalApiPassword_' . $mode,  $this->fieldLabel('paypalApiPassword_' . $mode)));
-        $apiGroup->push(new TextField('paypalApiSignature_' . $mode, $this->fieldLabel('paypalApiSignature_' . $mode)));
-        $apiGroup->push(new TextField('paypalApiVersion_' . $mode,   $this->fieldLabel('paypalApiVersion_' . $mode)));
+        $apiGroup = FieldGroup::create('APIDevGroup', '', $fields);
+        $apiGroup->push(TextField::create('paypalApiUsername_' . $mode,  $this->fieldLabel('paypalApiUsername_' . $mode)));
+        $apiGroup->push(TextField::create('paypalApiPassword_' . $mode,  $this->fieldLabel('paypalApiPassword_' . $mode)));
+        $apiGroup->push(TextField::create('paypalApiSignature_' . $mode, $this->fieldLabel('paypalApiSignature_' . $mode)));
+        $apiGroup->push(TextField::create('paypalApiVersion_' . $mode,   $this->fieldLabel('paypalApiVersion_' . $mode)));
         
-        $fieldlist = array(
+        $fieldlist = [
                     $apiGroup,
-                    new TextField('paypalCheckoutUrl_' . $mode,      $this->fieldLabel('paypalCheckoutUrl_' . $mode)),
-                    new TextField('paypalNvpApiServerUrl_' . $mode,  $this->fieldLabel('paypalNvpApiServerUrl_' . $mode)),
-                    new TextField('paypalSoapApiServerUrl_' . $mode, $this->fieldLabel('paypalSoapApiServerUrl_' . $mode)),
-        );
+                    TextField::create('paypalCheckoutUrl_' . $mode,      $this->fieldLabel('paypalCheckoutUrl_' . $mode)),
+                    TextField::create('paypalNvpApiServerUrl_' . $mode,  $this->fieldLabel('paypalNvpApiServerUrl_' . $mode)),
+                    TextField::create('paypalSoapApiServerUrl_' . $mode, $this->fieldLabel('paypalSoapApiServerUrl_' . $mode)),
+        ];
         
         if (!$forDev) {
-            $fieldlist[] = new TextField('paypalSharedSecret', $this->fieldLabel('paypalSharedSecret'));
+            $fieldlist[] = TextField::create('paypalSharedSecret', $this->fieldLabel('paypalSharedSecret'));
         }
         
         $apiDataToggle = ToggleCompositeField::create(
@@ -273,15 +265,16 @@ class Paypal extends PaymentMethod {
      * 
      * @return void
      */
-    protected function getFieldsForOrderStatus($fields) {
+    protected function getFieldsForOrderStatus($fields)
+    {
         $orderStatus = OrderStatus::get();
-        $fieldlist = array(
+        $fieldlist = [
                 $fields->dataFieldByName('orderStatus'),
-                new DropdownField('PaidOrderStatus',        $this->fieldLabel('PaidOrderStatus'),       $orderStatus->map('ID', 'Title'), $this->PaidOrderStatus),
-                new DropdownField('CanceledOrderStatus',    $this->fieldLabel('CanceledOrderStatus'),   $orderStatus->map('ID', 'Title'), $this->CanceledOrderStatus),
-                new DropdownField('PendingOrderStatus',     $this->fieldLabel('PendingOrderStatus'),    $orderStatus->map('ID', 'Title'), $this->PendingOrderStatus),
-                new DropdownField('RefundedOrderStatus',    $this->fieldLabel('RefundedOrderStatus'),   $orderStatus->map('ID', 'Title'), $this->RefundedOrderStatus)
-        );
+                DropdownField::create('PaidOrderStatus',     $this->fieldLabel('PaidOrderStatus'),     $orderStatus->map('ID', 'Title'), $this->PaidOrderStatus),
+                DropdownField::create('CanceledOrderStatus', $this->fieldLabel('CanceledOrderStatus'), $orderStatus->map('ID', 'Title'), $this->CanceledOrderStatus),
+                DropdownField::create('PendingOrderStatus',  $this->fieldLabel('PendingOrderStatus'),  $orderStatus->map('ID', 'Title'), $this->PendingOrderStatus),
+                DropdownField::create('RefundedOrderStatus', $this->fieldLabel('RefundedOrderStatus'), $orderStatus->map('ID', 'Title'), $this->RefundedOrderStatus)
+        ];
         
         $orderStatusDataToggle = ToggleCompositeField::create(
                 'OrderStatus',
@@ -299,14 +292,15 @@ class Paypal extends PaymentMethod {
      *
      * @return \SilverStripe\Forms\FieldList
      */
-    public function getCMSFields() {
+    public function getCMSFields()
+    {
         $fields = parent::getCMSFieldsForModules();
 
         $this->getFieldsForOrderStatus($fields);
         $this->getFieldsForAPI($fields, true);
         $this->getFieldsForAPI($fields);
         
-        $translations = new GridField(
+        $translations = GridField::create(
                 'PaypalTranslations',
                 $this->fieldLabel('PaypalTranslations'),
                 $this->PaypalTranslations(),
@@ -325,7 +319,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function requireDefaultRecords() {
+    public function requireDefaultRecords()
+    {
         parent::requireDefaultRecords();
         
         $requiredStatus = [
@@ -370,7 +365,8 @@ class Paypal extends PaymentMethod {
      *
      * @return string
      */
-    public function getOrderConfirmationSubmitButtonTitle() {
+    public function getOrderConfirmationSubmitButtonTitle()
+    {
         return $this->fieldLabel('OrderConfirmationSubmitButtonTitle');
     }
     
@@ -379,7 +375,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return string
      */
-    public function getPaypalCheckoutUrl() {
+    public function getPaypalCheckoutUrl()
+    {
         return $this->getCheckoutUrl();
     }
     
@@ -388,7 +385,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return string
      */
-    public function getCheckoutUrl() {
+    public function getCheckoutUrl()
+    {
         $paypalCheckoutUrl = '';
         if ($this->mode == 'Live') {
             $paypalCheckoutUrl = $this->paypalCheckoutUrl_Live . 'cmd=_express-checkout&token=' . $this->getPaypalToken();
@@ -403,7 +401,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return string
      */
-    public function getApiUsername() {
+    public function getApiUsername()
+    {
         if ($this->mode == 'Live') {
             return $this->paypalApiUsername_Live;
         } else {
@@ -416,7 +415,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return string
      */
-    public function getApiPassword() {
+    public function getApiPassword()
+    {
         if ($this->mode == 'Live') {
             return $this->paypalApiPassword_Live;
         } else {
@@ -429,7 +429,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return string
      */
-    public function getApiSignature() {
+    public function getApiSignature()
+    {
         if ($this->mode == 'Live') {
             return $this->paypalApiSignature_Live;
         } else {
@@ -442,7 +443,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return string
      */
-    public function getNvpApiServerUrl() {
+    public function getNvpApiServerUrl()
+    {
         if ($this->mode == 'Live') {
             return $this->paypalNvpApiServerUrl_Live;
         } else {
@@ -455,7 +457,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return string
      */
-    public function getSoapApiServerUrl() {
+    public function getSoapApiServerUrl()
+    {
         if ($this->mode == 'Live') {
             return $this->paypalSoapApiServerUrl_Live;
         } else {
@@ -468,7 +471,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return string
      */
-    public function getApiVersion() {
+    public function getApiVersion()
+    {
         if ($this->mode == 'Live') {
             return $this->paypalApiVersion_Live;
         } else {
@@ -481,10 +485,11 @@ class Paypal extends PaymentMethod {
      * 
      * @return string
      */
-    public function getIPNTargetURL() {
-        $url = 'ssl://sandbox.paypal.com';
+    public function getIPNTargetURL()
+    {
+        $url = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
         if ($this->mode == 'Live') {
-            $url = 'ssl://www.paypal.com';
+            $url = 'https://ipnpb.paypal.com/cgi-bin/webscr';
         }
         return $url;
     }
@@ -495,7 +500,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return array
      */
-    public function getIPNRequestVariables() {
+    public function getIPNRequestVariables()
+    {
         $variables  = [];
         $ipnKeysMap = [
             'txn_id'                => 'TRANSACTIONID',
@@ -526,10 +532,10 @@ class Paypal extends PaymentMethod {
         ];
 
         foreach ($ipnKeysMap as $ipnVariable => $checkoutVariable) {
-            if (isset($_REQUEST[$ipnVariable]) &&
-                $encoding = mb_detect_encoding($_REQUEST[$ipnVariable]) &&
-                $encoding != 'UTF-8') {
-                
+            if (isset($_REQUEST[$ipnVariable])
+                && $encoding = mb_detect_encoding($_REQUEST[$ipnVariable])
+                && $encoding != 'UTF-8'
+            ) {
                 $variables[$checkoutVariable] = iconv($encoding, 'UTF-8', $_REQUEST[$ipnVariable]);
             } else {
                 $variables[$checkoutVariable] = utf8_encode($_REQUEST[$ipnVariable]);
@@ -549,7 +555,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return array
      */
-    public function getIPNCustomVariables() {
+    public function getIPNCustomVariables()
+    {
         $variables = [];
 
         if (isset($_REQUEST['custom'])) {
@@ -572,7 +579,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return string
      */
-    public function getPayerID() {
+    public function getPayerID()
+    {
         $payerID = '';
         if (isset($_REQUEST['payer_id'])) {
             $payerID = $_REQUEST['payer_id'];
@@ -589,7 +597,8 @@ class Paypal extends PaymentMethod {
      *
      * @return string
      */
-    public function getPaypalToken() {
+    public function getPaypalToken()
+    {
         return Tools::Session()->get(self::TOKEN_SESSION_KEY);
     }
 
@@ -623,7 +632,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function canProcessBeforePaymentProvider(array $checkoutData) {
+    public function canProcessBeforePaymentProvider(array $checkoutData)
+    {
         return !$this->beforePaymentProviderIsProcessed();
     }
     
@@ -637,13 +647,15 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function canProcessAfterPaymentProvider(array $checkoutData) {
+    public function canProcessAfterPaymentProvider(array $checkoutData)
+    {
         $can     = false;
         $request = $this->getController()->getRequest();
         $token   = $request->getVar('token');
         $payerID = $request->getVar('PayerID');
-        if (!is_null($token) &&
-            !is_null($payerID)) {
+        if (!is_null($token)
+            && !is_null($payerID)
+        ) {
             $can = true;
         }
         return $can && $this->beforePaymentProviderIsProcessed() && !$this->afterPaymentProviderIsProcessed();
@@ -660,7 +672,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function canPlaceOrder(array $checkoutData) {
+    public function canPlaceOrder(array $checkoutData)
+    {
         return $this->beforePaymentProviderIsProcessed() && $this->afterPaymentProviderIsProcessed();
     }
     
@@ -674,7 +687,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function canProcessAfterOrder(Order $order, array $checkoutData) {
+    public function canProcessAfterOrder(Order $order, array $checkoutData)
+    {
         return $this->canPlaceOrder($checkoutData) && $order instanceof Order;// && $order->exists();
     }
     
@@ -691,15 +705,17 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function processBeforePaymentProvider(array $checkoutData) {
+    protected function processBeforePaymentProvider(array $checkoutData)
+    {
         $token = $this->fetchPaypalToken($checkoutData);
        
         if (!$this->errorOccured) {
             $this->saveToken($token);
         }
         
-        if (!($token === false &&
-              $this->errorOccured)) {
+        if (!($token === false
+             && $this->errorOccured)
+        ) {
             $skip = false;
             $this->extend('skipProcessBeforePaymentProvider', $skip);
             if ($skip) {
@@ -723,7 +739,8 @@ class Paypal extends PaymentMethod {
      *         Sascha Koehler <skoehler@pixeltricks.de>
      * @since 09.04.2014
      */
-    public function processAfterPaymentProvider(array $checkoutData) {
+    public function processAfterPaymentProvider(array $checkoutData)
+    {
         $request = $this->getController()->getRequest();
         $token   = $request->getVar('token');
         $payerID = $request->getVar('PayerID');
@@ -757,7 +774,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 25.04.2018
      */
-    protected function processAfterOrder(Order $order, array $checkoutData) {
+    protected function processAfterOrder(Order $order, array $checkoutData)
+    {
         $this->doExpressCheckoutPayment($order);
         $this->clearSession();
     }
@@ -772,7 +790,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function processNotification(HTTPRequest $request) {
+    protected function processNotification(HTTPRequest $request)
+    {
         if ($this->validateSharedSecret($request) === false) {
             $this->Log('processNotification', '');
             $this->Log('processNotification', 'ERROR: validation of the shared secret failed.');
@@ -788,8 +807,9 @@ class Paypal extends PaymentMethod {
             $customVariables = $this->getIPNCustomVariables();
 
             $order = Order::get()->byID($customVariables['order_id']);
-            if ($order instanceof Order &&
-                $order->exists()) {
+            if ($order instanceof Order
+                && $order->exists()
+            ) {
                 if (in_array($ipnVariables['PAYMENTSTATUS'], $this->successPaypalStatus)) {
                     $order->setOrderStatus(OrderStatus::get()->byID($this->PaidOrderStatus));
                 } elseif (in_array($ipnVariables['PAYMENTSTATUS'], $this->failedPaypalStatus)) {
@@ -802,9 +822,9 @@ class Paypal extends PaymentMethod {
             }
 
             $paypalOrder = PaypalOrder::get()->filter('orderId', $customVariables['order_id'])->first();
-            if ($paypalOrder instanceof PaypalOrder &&
-                $paypalOrder->exists()) {
-                
+            if ($paypalOrder instanceof PaypalOrder
+                && $paypalOrder->exists()
+            ) {
                 $paypalOrder->updateOrder(
                     $customVariables['order_id'],
                     $payerId,
@@ -838,7 +858,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 25.04.2018
      */
-    public function clearSession() {
+    public function clearSession()
+    {
         Tools::Session()->set(self::SESSION_KEY, null);
         Tools::saveSession();
     }
@@ -848,7 +869,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return bool
      */
-    protected function beforePaymentProviderIsProcessed() {
+    protected function beforePaymentProviderIsProcessed()
+    {
         return Tools::Session()->get(self::BEFORE_PAYMENT_PROVIDER_IS_PROCESSED_SESSION_KEY);
     }
     
@@ -857,7 +879,8 @@ class Paypal extends PaymentMethod {
      * 
      * @return bool
      */
-    protected function afterPaymentProviderIsProcessed() {
+    protected function afterPaymentProviderIsProcessed()
+    {
         return Tools::Session()->get(self::AFTER_PAYMENT_PROVIDER_IS_PROCESSED_SESSION_KEY);
     }
 
@@ -873,15 +896,17 @@ class Paypal extends PaymentMethod {
      *         Sascha Koehler <skoehler@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function fetchPaypalToken(array $checkoutData = []) {
+    public function fetchPaypalToken(array $checkoutData = [])
+    {
         if (empty($checkoutData)) {
             $checkoutData = $this->getController()->getCheckout()->getData();
         }
         $parameters    = $this->initPaypalTokenParameters($checkoutData);
         $apiCallResult = $this->callPaypalAPI('SetExpressCheckout', $this->generateUrlParams($parameters));
 
-        if (strtolower($apiCallResult['ACK']) != 'success' &&
-            strtolower($apiCallResult['ACK']) != 'successwithwarning') {
+        if (strtolower($apiCallResult['ACK']) != 'success'
+            && strtolower($apiCallResult['ACK']) != 'successwithwarning'
+        ) {
             $this->Log('fetchPaypalToken', 'ERROR: fetching Paypal token failed.');
             $this->Log('fetchPaypalToken', ' - API call parameters:');
             $this->Log('fetchPaypalToken', var_export($parameters, true));
@@ -913,7 +938,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function initPaypalTokenParameters(array $checkoutData) {
+    protected function initPaypalTokenParameters(array $checkoutData)
+    {
         $shippingAddress = $this->getShippingAddress();
         $shoppingCart    = $this->getShoppingCart();
         $positionIndex   = 0;
@@ -968,7 +994,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function addPositionParameters($shoppingCart, &$parameters, &$positionIndex) {
+    protected function addPositionParameters($shoppingCart, &$parameters, &$positionIndex)
+    {
         foreach ($shoppingCart->getTaxableShoppingcartPositions() as $position) {
             /* @var $position \SilverCart\Model\Order\ShoppingCartPosition */
             if ($position->hasMethod('getTaxAmount')) {
@@ -1002,7 +1029,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function addChargesAndDiscountsForProductsParameters($shoppingCart, &$parameters, &$positionIndex) {
+    protected function addChargesAndDiscountsForProductsParameters($shoppingCart, &$parameters, &$positionIndex)
+    {
         if ($shoppingCart->HasChargesAndDiscountsForProducts()) {
             $position = $shoppingCart->ChargesAndDiscountsForProducts();
             $parameters['L_PAYMENTREQUEST_0_NAME' . $positionIndex]         = $position->Name;
@@ -1025,7 +1053,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function addChargesAndDiscountsForTotalParameters($shoppingCart, &$parameters, &$positionIndex) {
+    protected function addChargesAndDiscountsForTotalParameters($shoppingCart, &$parameters, &$positionIndex)
+    {
         if ($shoppingCart->HasChargesAndDiscountsForTotal()) {
             $position = $shoppingCart->ChargesAndDiscountsForTotal();
             $amount   = round((float) $position->Price->getAmount(), 2);
@@ -1054,12 +1083,14 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function addTaxAmountParameters($shoppingCart, &$parameters) {
+    protected function addTaxAmountParameters($shoppingCart, &$parameters)
+    {
         if (!Customer::currentUser()->showPricesGross()) {
             // Add taxes as a special position when the current order is displayed in net price mode.
             $taxTotalList = $shoppingCart->getTaxTotal();
-            if ($taxTotalList instanceof ArrayList &&
-                $taxTotalList->exists()) {
+            if ($taxTotalList instanceof ArrayList
+                && $taxTotalList->exists()
+            ) {
                 $taxAmountTotal = 0;
                 foreach ($taxTotalList as $tax) {
                     $taxAmountTotal += $tax->AmountRaw;
@@ -1079,7 +1110,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function validateSharedSecret(HTTPRequest $request) {
+    public function validateSharedSecret(HTTPRequest $request)
+    {
         $secretIsValid    = false;
         $sentSharedSecret = $request->getVar($this->sharedSecretVariableName);
         if (is_string($sentSharedSecret)) {
@@ -1113,15 +1145,16 @@ class Paypal extends PaymentMethod {
      * @return bool
      *
      * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 24.04.2018
+     * @since 05.09.2018
      */
-    public function isValidPaypalIPNCall(HTTPRequest $request) {
+    public function isValidPaypalIPNCall(HTTPRequest $request)
+    {
         $requestIsFromPaypal = false;
         $req                 = 'cmd=_notify-validate';
         $url                 = $this->getIPNTargetURL();
         
         // Combine request data to an URL encoded string
-        foreach ($request->getVars() as $key => $value) {
+        foreach ($request->postVars() as $key => $value) {
             if (get_magic_quotes_gpc() == 1) {
                 $value = urlencode(stripslashes($value));
             } else {
@@ -1129,43 +1162,38 @@ class Paypal extends PaymentMethod {
             }
             $req .= "&$key=$value";
         }
-
-        // Create header string to send back to Paypal
-        $header  = "POST /cgi-bin/webscr HTTP/1.1\r\n";
-        $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen($req) . "\r\n";
-        $header .= "Host: www.paypal.com\r\n"; 
-        $header .= "Connection: close\r\n\r\n";
         
-        $fp = fsockopen($url, 443, $errno, $errstr, 30);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Connection: Close']);
 
-        if (!$fp) {
+        if (!($res = curl_exec($ch))) {
             $this->Log('isValidPaypalIPNCall', '');
             $this->Log('isValidPaypalIPNCall', 'ERROR: couldn\'t connect to Paypal.');
             $this->Log('isValidPaypalIPNCall', ' - URL: ' . $url);
-            $this->Log('isValidPaypalIPNCall', ' - code: ' . $errno);
-            $this->Log('isValidPaypalIPNCall', ' - message: ' . $errstr);
+            $this->Log('isValidPaypalIPNCall', ' - code: ' . curl_errno($ch));
+            $this->Log('isValidPaypalIPNCall', ' - message: ' . curl_error($ch));
             $this->Log('isValidPaypalIPNCall', '');
+            curl_close($ch);
         } else {
-            fputs($fp, $header . $req);
-
-            while (!feof($fp)) {
-
-                $res = fgets($fp, 1024);
-
-                if (strcmp($res, "VERIFIED") == 0) {
-                    // IPN call was verified and is valid
-                    $requestIsFromPaypal = true;
-                } else if (strcmp($res, "INVALID") == 0) {
-                    // IPN call is NOT valid
-                    $this->Log('isValidPaypalIPNCall', '');
-                    $this->Log('isValidPaypalIPNCall', 'ERROR: payment notification was not sent by Paypal.');
-                    $this->Log('isValidPaypalIPNCall', ' - Paypal request: ' . var_export($req, true));
-                    $this->Log('isValidPaypalIPNCall', ' - Paypal response: ' . var_export($res, true));
-                    $this->Log('isValidPaypalIPNCall', '');
-                }
+            curl_close($ch);
+            if (strcmp ($res, "VERIFIED") == 0) {
+                // IPN call was verified and is valid
+                $requestIsFromPaypal = true;
+            } elseif (strcmp($res, "INVALID") == 0) {
+                // IPN call is NOT valid
+                $this->Log('isValidPaypalIPNCall', '');
+                $this->Log('isValidPaypalIPNCall', 'ERROR: payment notification was not sent by Paypal.');
+                $this->Log('isValidPaypalIPNCall', ' - Paypal request: ' . var_export($req, true));
+                $this->Log('isValidPaypalIPNCall', ' - Paypal response: ' . var_export($res, true));
+                $this->Log('isValidPaypalIPNCall', '');
             }
-            fclose($fp);
         }
 
         return $requestIsFromPaypal;
@@ -1176,12 +1204,13 @@ class Paypal extends PaymentMethod {
      * 
      * @return void
      */
-    public function getExpressCheckoutDetails() {
+    public function getExpressCheckoutDetails()
+    {
 
-        $parameters = array(
+        $parameters = [
             'TOKEN'   => $this->getPaypalToken(),
             'PAYERID' => $this->getPayerID()
-        );
+        ];
 
         $response = $this->callPaypalAPI('GetExpressCheckoutDetails', $this->generateUrlParams($parameters));
 
@@ -1206,7 +1235,8 @@ class Paypal extends PaymentMethod {
      *         Sascha Koehler <skoehler@pixeltricks.de>
      * @since 25.04.2018
      */
-    public function doExpressCheckoutPayment(Order $order = null) {
+    public function doExpressCheckoutPayment(Order $order = null)
+    {
         if (is_null($order)) {
             $order = $this->getOrder();
         }
@@ -1221,7 +1251,7 @@ class Paypal extends PaymentMethod {
             $response['ORDERTIME_CUSTOM'] = '';
         }
 
-        $paypalOrder = new PaypalOrder();
+        $paypalOrder = PaypalOrder::create();
         $paypalOrder->updateOrder($order->ID, $this->getPayerID(), $response);
 
         if (isset($response['PAYMENTSTATUS'])) {
@@ -1274,7 +1304,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function initPaypalExpressPaymentParameters(Order $order) {
+    protected function initPaypalExpressPaymentParameters(Order $order)
+    {
         $cartAmountGross = round((float) $order->AmountTotal->getAmount(), 2);
         $itemAmountGross = round((float) $order->getPositionsPriceGross()->getAmount(), 2);
         $itemAmountNet   = round((float) $order->getPositionsPriceNet()->getAmount(), 2);
@@ -1322,8 +1353,8 @@ class Paypal extends PaymentMethod {
      *         Sascha Koehler <skoehler@pixeltricks.de>
      * @since 06.11.2015
      */
-    public function generateUrlParams($parameters) {
-
+    public function generateUrlParams($parameters)
+    {
         $paramString = '';
 
         foreach ($parameters as $key => $value) {
@@ -1346,7 +1377,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function callPaypalAPI($methodName, $nvpStr) {
+    public function callPaypalAPI($methodName, $nvpStr)
+    {
         $nvpreq = "METHOD=" . urlencode($methodName) .
                 "&VERSION=" . urlencode($this->ApiVersion) .
                 "&PWD=" . urlencode($this->ApiPassword) .
@@ -1390,7 +1422,8 @@ class Paypal extends PaymentMethod {
      * @author Sascha Koehler <skoehler@pixeltricks.de>
      * @since 17.11.2010
      */
-    protected function deformatNVP($nvpstr) {
+    protected function deformatNVP($nvpstr)
+    {
         $intial   = 0;
         $nvpArray = [];
 
@@ -1420,7 +1453,8 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function saveToken($token) {
+    public function saveToken($token)
+    {
         Tools::Session()->set(self::TOKEN_SESSION_KEY, $token);
         Tools::saveSession();
     }
@@ -1435,9 +1469,9 @@ class Paypal extends PaymentMethod {
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function savePayerID($payerID) {
+    public function savePayerID($payerID)
+    {
         Tools::Session()->set(self::PAYERID_SESSION_KEY, $payerID);
         Tools::saveSession();
     }
-
 }
