@@ -7,14 +7,17 @@ use SilverCart\Forms\FormFields\FieldGroup;
 use SilverCart\Forms\FormFields\TextField;
 use SilverCart\Model\Customer\Customer;
 use SilverCart\Model\Order\Order;
-use SilverCart\Model\Order\OrderStatus;
 use SilverCart\Model\Payment\PaymentMethod;
+use SilverCart\Model\Payment\PaymentStatus;
+use SilverCart\ORM\Connect\DBMigration;
 use SilverCart\Paypal\Model\PaypalTranslation;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\ORM\DB;
 
 /**
  * Paypal payment modul
@@ -56,10 +59,10 @@ class Paypal extends PaymentMethod
         'paypalSoapApiServerUrl_Live' => 'Varchar(255)',
         'paypalApiVersion_Dev'        => 'Varchar(255)',
         'paypalApiVersion_Live'       => 'Varchar(255)',
-        'PaidOrderStatus'             => 'Int',
-        'CanceledOrderStatus'         => 'Int',
-        'PendingOrderStatus'          => 'Int',
-        'RefundedOrderStatus'         => 'Int'
+        'PaymentStatusPaid'           => 'Int',
+        'PaymentStatusCanceled'       => 'Int',
+        'PaymentStatusPending'        => 'Int',
+        'PaymentStatusRefunded'       => 'Int'
     ];
     /**
      * Casted attributes
@@ -171,6 +174,7 @@ class Paypal extends PaymentMethod
     {
         $fields = array_merge(
                 parent::fieldLabels($includerelations),
+                Tools::field_labels_for(self::class),
                 [
                     'paypalSharedSecret'                 => _t(self::class . '.SHARED_SECRET', 'shared secret for secure communication'),
                     'paypalCheckoutUrl'                  => _t(self::class . '.CHECKOUT_URL', 'URL to the paypal checkout'),
@@ -194,11 +198,7 @@ class Paypal extends PaymentMethod
                     'paypalSoapApiServerUrl'             => _t(self::class . '.URL_API_SOAP', 'URL to the paypal SOAP API server'),
                     'paypalSoapApiServerUrl_Dev'         => _t(self::class . '.URL_API_SOAP', 'URL to the paypal SOAP API server'),
                     'paypalSoapApiServerUrl_Live'        => _t(self::class . '.URL_API_SOAP', 'URL to the paypal SOAP API server'),
-                    'PaidOrderStatus'                    => _t(self::class . '.ORDERSTATUS_PAID', 'orderstatus for notification "paid"'),
-                    'CanceledOrderStatus'                => _t(self::class . '.ORDERSTATUS_CANCELED', 'orderstatus for notification "canceled"'),
-                    'PendingOrderStatus'                 => _t(self::class . '.ORDERSTATUS_PENDING', 'orderstatus for notification "pending"'),
-                    'RefundedOrderStatus'                => _t(self::class . '.ORDERSTATUS_REFUNDED', 'orderstatus for notification "refunded"'),
-                    'TabOrderStatus'                     => _t(self::class . '.ATTRIBUTED_ORDERSTATUS', 'attributed order status'),
+                    'TabPaymentStatus'                   => _t(self::class . '.TabPaymentStatus', 'Attributed Payment Status'),
                     'TabApiDev'                          => _t(self::class . '.API_DEVELOPMENT_MODE', 'API development mode'),
                     'TabApiLive'                         => _t(self::class . '.API_LIVE_MODE', 'API live mode'),
                     'TabUrlsDev'                         => _t(self::class . '.URLS_DEV_MODE', 'URLs of dev mode'),
@@ -206,7 +206,7 @@ class Paypal extends PaymentMethod
                     'PaypalApiData'                      => _t(self::class . '.PaypalApiData', 'PayPal login data'),
                     'OrderConfirmationSubmitButtonTitle' => _t(self::class . '.ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE', 'Proceed to payment via PayPal'),
                     'PaypalTranslations'                 => PaypalTranslation::singleton()->plural_name(),
-                    'StatusPaid'                         => _t(OrderStatus::class . '.PAID', 'Paid'),
+                    'StatusPaid'                         => _t(PaymentStatus::class . '.DefaultStatusPaid', 'Paid'),
                     'StatusPaypalRefunded'               => _t(self::class . '.StatusPaypalRefunding', 'PayPal refunding'),
                     'StatusPaypalPending'                => _t(self::class . '.StatusPaypalPending', 'PayPal pending'),
                     'StatusPaypalSuccess'                => _t(self::class . '.StatusPaypalSuccess', 'Payment approved by PayPal'),
@@ -265,26 +265,26 @@ class Paypal extends PaymentMethod
      * 
      * @return void
      */
-    protected function getFieldsForOrderStatus($fields)
+    protected function getFieldsForPaymentStatus($fields)
     {
-        $orderStatus = OrderStatus::get();
+        $paymentStatus = PaymentStatus::get();
         $fieldlist = [
-                $fields->dataFieldByName('orderStatus'),
-                DropdownField::create('PaidOrderStatus',     $this->fieldLabel('PaidOrderStatus'),     $orderStatus->map('ID', 'Title'), $this->PaidOrderStatus),
-                DropdownField::create('CanceledOrderStatus', $this->fieldLabel('CanceledOrderStatus'), $orderStatus->map('ID', 'Title'), $this->CanceledOrderStatus),
-                DropdownField::create('PendingOrderStatus',  $this->fieldLabel('PendingOrderStatus'),  $orderStatus->map('ID', 'Title'), $this->PendingOrderStatus),
-                DropdownField::create('RefundedOrderStatus', $this->fieldLabel('RefundedOrderStatus'), $orderStatus->map('ID', 'Title'), $this->RefundedOrderStatus)
+                $fields->dataFieldByName('PaymentStatusID'),
+                DropdownField::create('PaymentStatusPaid',     $this->fieldLabel('PaymentStatusPaid'),     $paymentStatus->map('ID', 'Title'), $this->PaymentStatusPaid),
+                DropdownField::create('PaymentStatusCanceled', $this->fieldLabel('PaymentStatusCanceled'), $paymentStatus->map('ID', 'Title'), $this->PaymentStatusCanceled),
+                DropdownField::create('PaymentStatusPending',  $this->fieldLabel('PaymentStatusPending'),  $paymentStatus->map('ID', 'Title'), $this->PaymentStatusPending),
+                DropdownField::create('PaymentStatusRefunded', $this->fieldLabel('PaymentStatusRefunded'), $paymentStatus->map('ID', 'Title'), $this->PaymentStatusRefunded)
         ];
         
-        $orderStatusDataToggle = ToggleCompositeField::create(
-                'OrderStatus',
-                $this->fieldLabel('TabOrderStatus'),
+        $paymentStatusDataToggle = ToggleCompositeField::create(
+                'PaymentStatus',
+                $this->fieldLabel('TabPaymentStatus'),
                 $fieldlist
         )->setHeadingLevel(4)->setStartClosed(true);
         
-        $fields->removeByName('orderStatus');
+        $fields->removeByName('PaymentStatusID');
         
-        $fields->addFieldToTab('Root.Basic', $orderStatusDataToggle);
+        $fields->addFieldToTab('Root.Basic', $paymentStatusDataToggle);
     }
 
     /**
@@ -294,21 +294,20 @@ class Paypal extends PaymentMethod
      */
     public function getCMSFields()
     {
-        $fields = parent::getCMSFieldsForModules();
+        $this->beforeUpdateCMSFields(function(FieldList $fields) {
+            $this->getFieldsForPaymentStatus($fields);
+            $this->getFieldsForAPI($fields, true);
+            $this->getFieldsForAPI($fields);
 
-        $this->getFieldsForOrderStatus($fields);
-        $this->getFieldsForAPI($fields, true);
-        $this->getFieldsForAPI($fields);
-        
-        $translations = GridField::create(
-                'PaypalTranslations',
-                $this->fieldLabel('PaypalTranslations'),
-                $this->PaypalTranslations(),
-                GridFieldConfig_ExclusiveRelationEditor::create()
-        );
-        $fields->addFieldToTab('Root.Translations', $translations);
-        
-        return $fields;
+            $translations = GridField::create(
+                    'PaypalTranslations',
+                    $this->fieldLabel('PaypalTranslations'),
+                    $this->PaypalTranslations(),
+                    GridFieldConfig_ExclusiveRelationEditor::create()
+            );
+            $fields->addFieldToTab('Root.Translations', $translations);
+        });
+        return parent::getCMSFieldsForModules();
     }
     
     /**
@@ -336,20 +335,39 @@ class Paypal extends PaymentMethod
             'Paypal' => SILVERCART_PAYPAL_IMG_PATH . DIRECTORY_SEPARATOR . 'paypal-payments.png',
         ];
 
-        parent::createRequiredOrderStatus($requiredStatus);
+        parent::createRequiredPaymentStatus($requiredStatus);
         parent::createLogoImageObjects($paymentLogos, self::class);
 
-        $paypalPayments = Paypal::get()->filter('PaidOrderStatus', 0);
+        $paypalPayments = Paypal::get()->filter('PaymentStatusPaid', 0);
         if ($paypalPayments->exists()) {
             foreach ($paypalPayments as $paypalPayment) {
-                $paypalPayment->PaidOrderStatus      = OrderStatus::get()->filter('Code', 'paid')->first()->ID;
-                $paypalPayment->successPaypalStatus  = OrderStatus::get()->filter('Code', 'paypal_success')->first()->ID;
-                $paypalPayment->failedPaypalStatus   = OrderStatus::get()->filter('Code', 'paypal_error')->first()->ID;
-                $paypalPayment->refundedPaypalStatus = OrderStatus::get()->filter('Code', 'paypal_refunded')->first()->ID;
-                $paypalPayment->pendingPaypalStatus  = OrderStatus::get()->filter('Code', 'paypal_pending')->first()->ID;
+                $paypalPayment->PaymentStatusPaid    = PaymentStatus::get()->filter('Code', 'paid')->first()->ID;
+                $paypalPayment->successPaypalStatus  = PaymentStatus::get()->filter('Code', 'paypal_success')->first()->ID;
+                $paypalPayment->failedPaypalStatus   = PaymentStatus::get()->filter('Code', 'paypal_error')->first()->ID;
+                $paypalPayment->refundedPaypalStatus = PaymentStatus::get()->filter('Code', 'paypal_refunded')->first()->ID;
+                $paypalPayment->pendingPaypalStatus  = PaymentStatus::get()->filter('Code', 'paypal_pending')->first()->ID;
                 $paypalPayment->write();
             }
         }
+    }
+    
+    /**
+     * Renames some DB fields if necessary and then calls parent::requireTable().
+     * 
+     * @return void
+     * 
+     * @author Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 07.09.2018
+     */
+    public function requireTable()
+    {
+        DBMigration::rename_fields($this, [
+            'PaidOrderStatus'     => 'PaymentStatusPaid',
+            'CanceledOrderStatus' => 'PaymentStatusCanceled',
+            'PendingOrderStatus'  => 'PaymentStatusPending',
+            'RefundedOrderStatus' => 'PaymentStatusRefunded',
+        ]);
+        return parent::requireTable();
     }
 
     /***********************************************************************************************
@@ -811,13 +829,13 @@ class Paypal extends PaymentMethod
                 && $order->exists()
             ) {
                 if (in_array($ipnVariables['PAYMENTSTATUS'], $this->successPaypalStatus)) {
-                    $order->setOrderStatus(OrderStatus::get()->byID($this->PaidOrderStatus));
+                    $order->setPaymentStatus(PaymentStatus::get()->byID($this->PaymentStatusPaid));
                 } elseif (in_array($ipnVariables['PAYMENTSTATUS'], $this->failedPaypalStatus)) {
-                    $order->setOrderStatus(OrderStatus::get()->byID($this->CanceledOrderStatus));
+                    $order->setPaymentStatus(PaymentStatus::get()->byID($this->PaymentStatusCanceled));
                 } elseif (in_array($ipnVariables['PAYMENTSTATUS'], $this->refundedPaypalStatus)) {
-                    $order->setOrderStatus(OrderStatus::get()->byID($this->RefundedOrderStatus));
+                    $order->setPaymentStatus(PaymentStatus::get()->byID($this->PaymentStatusRefunded));
                 } elseif (in_array($ipnVariables['PAYMENTSTATUS'], $this->pendingPaypalStatus)) {
-                    $order->setOrderStatus(OrderStatus::get()->byID($this->PendingOrderStatus));
+                    $order->setPaymentStatus(PaymentStatus::get()->byID($this->PaymentStatusPending));
                 }
             }
 
@@ -1256,24 +1274,24 @@ class Paypal extends PaymentMethod
 
         if (isset($response['PAYMENTSTATUS'])) {
             if (in_array($response['PAYMENTSTATUS'], $this->successPaypalStatus)) {
-                $orderStatusID = $this->PaidOrderStatus;
+                $paymentStatusID = $this->PaymentStatusPaid;
             } elseif (in_array($response['PAYMENTSTATUS'], $this->failedPaypalStatus)) {
-                $orderStatusID = $this->CanceledOrderStatus;
+                $paymentStatusID = $this->PaymentStatusCanceled;
             } elseif (in_array($response['PAYMENTSTATUS'], $this->pendingPaypalStatus)) {
-                $orderStatusID = $this->PendingOrderStatus;
+                $paymentStatusID = $this->PaymentStatusPending;
             } elseif (in_array($response['PAYMENTSTATUS'], $this->refundedPaypalStatus)) {
-                $orderStatusID = $this->RefundedOrderStatus;
+                $paymentStatusID = $this->PaymentStatusRefunded;
             } else {
-                $orderStatusID = $this->CanceledOrderStatus;
+                $paymentStatusID = $this->PaymentStatusCanceled;
             }
         } else {
-            $orderStatusID = $this->CanceledOrderStatus;
+            $paymentStatusID = $this->PaymentStatusCanceled;
         }
         
-        if (is_numeric($orderStatusID)) {
-            $orderStatus = OrderStatus::get()->byID($orderStatusID);
-            if ($orderStatus instanceof OrderStatus) {
-                $order->setOrderStatus($orderStatus);
+        if (is_numeric($paymentStatusID)) {
+            $paymentStatus = PaymentStatus::get()->byID($paymentStatusID);
+            if ($paymentStatus instanceof PaymentStatus) {
+                $order->setPaymentStatus($paymentStatus);
             }
         }
 
