@@ -172,50 +172,52 @@ class Paypal extends PaymentMethod
      */
     public function fieldLabels($includerelations = true)
     {
-        $fields = array_merge(
-                parent::fieldLabels($includerelations),
-                Tools::field_labels_for(self::class),
-                [
-                    'paypalSharedSecret'                 => _t(self::class . '.SHARED_SECRET', 'shared secret for secure communication'),
-                    'paypalCheckoutUrl'                  => _t(self::class . '.CHECKOUT_URL', 'URL to the paypal checkout'),
-                    'paypalCheckoutUrl_Dev'              => _t(self::class . '.CHECKOUT_URL', 'URL to the paypal checkout'),
-                    'paypalCheckoutUrl_Live'             => _t(self::class . '.CHECKOUT_URL', 'URL to the paypal checkout'),
-                    'paypalApiUsername'                  => _t(self::class . '.API_USERNAME', 'API username'),
-                    'paypalApiUsername_Dev'              => _t(self::class . '.API_USERNAME', 'API username'),
-                    'paypalApiUsername_Live'             => _t(self::class . '.API_USERNAME', 'API username'),
-                    'paypalApiPassword'                  => _t(self::class . '.API_PASSWORD', 'API password'),
-                    'paypalApiPassword_Dev'              => _t(self::class . '.API_PASSWORD', 'API password'),
-                    'paypalApiPassword_Live'             => _t(self::class . '.API_PASSWORD', 'API password'),
-                    'paypalApiSignature'                 => _t(self::class . '.API_SIGNATURE', 'API signature'),
-                    'paypalApiSignature_Dev'             => _t(self::class . '.API_SIGNATURE', 'API signature'),
-                    'paypalApiSignature_Live'            => _t(self::class . '.API_SIGNATURE', 'API signature'),
-                    'paypalApiVersion'                   => _t(self::class . '.API_VERSION', 'API version'),
-                    'paypalApiVersion_Dev'               => _t(self::class . '.API_VERSION', 'API version'),
-                    'paypalApiVersion_Live'              => _t(self::class . '.API_VERSION', 'API version'),
-                    'paypalNvpApiServerUrl'              => _t(self::class . '.URL_API_NVP', 'URL to the paypal NVP API server'),
-                    'paypalNvpApiServerUrl_Dev'          => _t(self::class . '.URL_API_NVP', 'URL to the paypal NVP API server'),
-                    'paypalNvpApiServerUrl_Live'         => _t(self::class . '.URL_API_NVP', 'URL to the paypal NVP API server'),
-                    'paypalSoapApiServerUrl'             => _t(self::class . '.URL_API_SOAP', 'URL to the paypal SOAP API server'),
-                    'paypalSoapApiServerUrl_Dev'         => _t(self::class . '.URL_API_SOAP', 'URL to the paypal SOAP API server'),
-                    'paypalSoapApiServerUrl_Live'        => _t(self::class . '.URL_API_SOAP', 'URL to the paypal SOAP API server'),
-                    'TabPaymentStatus'                   => _t(self::class . '.TabPaymentStatus', 'Attributed Payment Status'),
-                    'TabApiDev'                          => _t(self::class . '.API_DEVELOPMENT_MODE', 'API development mode'),
-                    'TabApiLive'                         => _t(self::class . '.API_LIVE_MODE', 'API live mode'),
-                    'TabUrlsDev'                         => _t(self::class . '.URLS_DEV_MODE', 'URLs of dev mode'),
-                    'TabUrlsLive'                        => _t(self::class . '.URLS_LIVE_MODE', 'URLs of live mode'),
-                    'PaypalApiData'                      => _t(self::class . '.PaypalApiData', 'PayPal login data'),
-                    'OrderConfirmationSubmitButtonTitle' => _t(self::class . '.ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE', 'Proceed to payment via PayPal'),
-                    'PaypalTranslations'                 => PaypalTranslation::singleton()->plural_name(),
-                    'StatusPaid'                         => _t(PaymentStatus::class . '.DefaultStatusPaid', 'Paid'),
-                    'StatusPaypalRefunded'               => _t(self::class . '.StatusPaypalRefunding', 'PayPal refunding'),
-                    'StatusPaypalPending'                => _t(self::class . '.StatusPaypalPending', 'PayPal pending'),
-                    'StatusPaypalSuccess'                => _t(self::class . '.StatusPaypalSuccess', 'Payment approved by PayPal'),
-                    'StatusPaypalError'                  => _t(self::class . '.StatusPaypalError', 'PayPal error'),
-                    'StatusPaypalCanceled'               => _t(self::class . '.StatusPaypalCanceled', 'PayPal canceled'),
-                    'AnErrorOccurredPaymentFailed'       => _t(self::class . '.AnErrorOccurredPaymentFailed', 'PayPal payment failed (error 10417)'),
-                ]
-        );
-        return $fields;
+        $this->beforeUpdateFieldLabels(function(&$labels) {
+            $labels = array_merge(
+                    $labels,
+                    Tools::field_labels_for(self::class),
+                    [
+                        'paypalSharedSecret'                 => _t(self::class . '.SHARED_SECRET', 'shared secret for secure communication'),
+                        'paypalCheckoutUrl'                  => _t(self::class . '.CHECKOUT_URL', 'URL to the paypal checkout'),
+                        'paypalCheckoutUrl_Dev'              => _t(self::class . '.CHECKOUT_URL', 'URL to the paypal checkout'),
+                        'paypalCheckoutUrl_Live'             => _t(self::class . '.CHECKOUT_URL', 'URL to the paypal checkout'),
+                        'paypalApiUsername'                  => _t(self::class . '.API_USERNAME', 'API username'),
+                        'paypalApiUsername_Dev'              => _t(self::class . '.API_USERNAME', 'API username'),
+                        'paypalApiUsername_Live'             => _t(self::class . '.API_USERNAME', 'API username'),
+                        'paypalApiPassword'                  => _t(self::class . '.API_PASSWORD', 'API password'),
+                        'paypalApiPassword_Dev'              => _t(self::class . '.API_PASSWORD', 'API password'),
+                        'paypalApiPassword_Live'             => _t(self::class . '.API_PASSWORD', 'API password'),
+                        'paypalApiSignature'                 => _t(self::class . '.API_SIGNATURE', 'API signature'),
+                        'paypalApiSignature_Dev'             => _t(self::class . '.API_SIGNATURE', 'API signature'),
+                        'paypalApiSignature_Live'            => _t(self::class . '.API_SIGNATURE', 'API signature'),
+                        'paypalApiVersion'                   => _t(self::class . '.API_VERSION', 'API version'),
+                        'paypalApiVersion_Dev'               => _t(self::class . '.API_VERSION', 'API version'),
+                        'paypalApiVersion_Live'              => _t(self::class . '.API_VERSION', 'API version'),
+                        'paypalNvpApiServerUrl'              => _t(self::class . '.URL_API_NVP', 'URL to the paypal NVP API server'),
+                        'paypalNvpApiServerUrl_Dev'          => _t(self::class . '.URL_API_NVP', 'URL to the paypal NVP API server'),
+                        'paypalNvpApiServerUrl_Live'         => _t(self::class . '.URL_API_NVP', 'URL to the paypal NVP API server'),
+                        'paypalSoapApiServerUrl'             => _t(self::class . '.URL_API_SOAP', 'URL to the paypal SOAP API server'),
+                        'paypalSoapApiServerUrl_Dev'         => _t(self::class . '.URL_API_SOAP', 'URL to the paypal SOAP API server'),
+                        'paypalSoapApiServerUrl_Live'        => _t(self::class . '.URL_API_SOAP', 'URL to the paypal SOAP API server'),
+                        'TabPaymentStatus'                   => _t(self::class . '.TabPaymentStatus', 'Attributed Payment Status'),
+                        'TabApiDev'                          => _t(self::class . '.API_DEVELOPMENT_MODE', 'API development mode'),
+                        'TabApiLive'                         => _t(self::class . '.API_LIVE_MODE', 'API live mode'),
+                        'TabUrlsDev'                         => _t(self::class . '.URLS_DEV_MODE', 'URLs of dev mode'),
+                        'TabUrlsLive'                        => _t(self::class . '.URLS_LIVE_MODE', 'URLs of live mode'),
+                        'PaypalApiData'                      => _t(self::class . '.PaypalApiData', 'PayPal login data'),
+                        'OrderConfirmationSubmitButtonTitle' => _t(self::class . '.ORDER_CONFIRMATION_SUBMIT_BUTTON_TITLE', 'Proceed to payment via PayPal'),
+                        'PaypalTranslations'                 => PaypalTranslation::singleton()->plural_name(),
+                        'StatusPaid'                         => _t(PaymentStatus::class . '.DefaultStatusPaid', 'Paid'),
+                        'StatusPaypalRefunded'               => _t(self::class . '.StatusPaypalRefunding', 'PayPal refunding'),
+                        'StatusPaypalPending'                => _t(self::class . '.StatusPaypalPending', 'PayPal pending'),
+                        'StatusPaypalSuccess'                => _t(self::class . '.StatusPaypalSuccess', 'Payment approved by PayPal'),
+                        'StatusPaypalError'                  => _t(self::class . '.StatusPaypalError', 'PayPal error'),
+                        'StatusPaypalCanceled'               => _t(self::class . '.StatusPaypalCanceled', 'PayPal canceled'),
+                        'AnErrorOccurredPaymentFailed'       => _t(self::class . '.AnErrorOccurredPaymentFailed', 'PayPal payment failed (error 10417)'),
+                    ]
+            );
+        });
+        return parent::fieldLabels($includerelations);
     }
     
     /**
