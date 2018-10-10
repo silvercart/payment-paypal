@@ -861,6 +861,21 @@ class Paypal extends PaymentMethod
             $this->Log('processNotification', '');
         }
     }
+    
+    /**
+     * Resets the payment progress hold in session.
+     * 
+     * @return void
+     * 
+     * @author Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 10.10.2018
+     */
+    public function resetProgress()
+    {
+        Tools::Session()->set(self::BEFORE_PAYMENT_PROVIDER_IS_PROCESSED_SESSION_KEY, false);
+        Tools::Session()->set(self::AFTER_PAYMENT_PROVIDER_IS_PROCESSED_SESSION_KEY, false);
+        Tools::saveSession();
+    }
 
     /***********************************************************************************************
      ***********************************************************************************************
