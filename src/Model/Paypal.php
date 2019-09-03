@@ -17,7 +17,6 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\ORM\DB;
 
 /**
  * Paypal payment modul
@@ -170,7 +169,7 @@ class Paypal extends PaymentMethod
      *         Roland Lehmann <rlehmann@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function fieldLabels($includerelations = true)
+    public function fieldLabels($includerelations = true) : array
     {
         $this->beforeUpdateFieldLabels(function(&$labels) {
             $labels = array_merge(
@@ -228,7 +227,7 @@ class Paypal extends PaymentMethod
      * 
      * @return void
      */
-    protected function getFieldsForAPI($fields, $forDev = false)
+    protected function getFieldsForAPI($fields, $forDev = false) : void
     {
         $mode = 'Live';
         if ($forDev) {
@@ -267,7 +266,7 @@ class Paypal extends PaymentMethod
      * 
      * @return void
      */
-    protected function getFieldsForPaymentStatus($fields)
+    protected function getFieldsForPaymentStatus($fields) : void
     {
         $paymentStatus = PaymentStatus::get();
         $fieldlist = [
@@ -294,7 +293,7 @@ class Paypal extends PaymentMethod
      *
      * @return \SilverStripe\Forms\FieldList
      */
-    public function getCMSFields()
+    public function getCMSFields() : FieldList
     {
         $this->beforeUpdateCMSFields(function(FieldList $fields) {
             $this->getFieldsForPaymentStatus($fields);
@@ -320,7 +319,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function requireDefaultRecords()
+    public function requireDefaultRecords() : void
     {
         parent::requireDefaultRecords();
         
@@ -361,7 +360,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 07.09.2018
      */
-    public function requireTable()
+    public function requireTable() : void
     {
         DBMigration::rename_fields($this, [
             'PaidOrderStatus'     => 'PaymentStatusPaid',
@@ -369,7 +368,7 @@ class Paypal extends PaymentMethod
             'PendingOrderStatus'  => 'PaymentStatusPending',
             'RefundedOrderStatus' => 'PaymentStatusRefunded',
         ]);
-        return parent::requireTable();
+        parent::requireTable();
     }
 
     /***********************************************************************************************
@@ -385,7 +384,7 @@ class Paypal extends PaymentMethod
      *
      * @return string
      */
-    public function getOrderConfirmationSubmitButtonTitle()
+    public function getOrderConfirmationSubmitButtonTitle() : string
     {
         return $this->fieldLabel('OrderConfirmationSubmitButtonTitle');
     }
@@ -395,7 +394,7 @@ class Paypal extends PaymentMethod
      * 
      * @return string
      */
-    public function getPaypalCheckoutUrl()
+    public function getPaypalCheckoutUrl() : string
     {
         return $this->getCheckoutUrl();
     }
@@ -405,13 +404,13 @@ class Paypal extends PaymentMethod
      * 
      * @return string
      */
-    public function getCheckoutUrl()
+    public function getCheckoutUrl() : string
     {
         $paypalCheckoutUrl = '';
         if ($this->mode == 'Live') {
-            $paypalCheckoutUrl = $this->paypalCheckoutUrl_Live . 'cmd=_express-checkout&token=' . $this->getPaypalToken();
+            $paypalCheckoutUrl = "{$this->paypalCheckoutUrl_Live}cmd=_express-checkout&token={$this->getPaypalToken()}";
         } else {
-            $paypalCheckoutUrl = $this->paypalCheckoutUrl_Dev . 'cmd=_express-checkout&token=' . $this->getPaypalToken();
+            $paypalCheckoutUrl = "{$this->paypalCheckoutUrl_Dev}cmd=_express-checkout&token={$this->getPaypalToken()}";
         }
         return $paypalCheckoutUrl;
     }
@@ -421,12 +420,12 @@ class Paypal extends PaymentMethod
      * 
      * @return string
      */
-    public function getApiUsername()
+    public function getApiUsername() : string
     {
         if ($this->mode == 'Live') {
-            return $this->paypalApiUsername_Live;
+            return (string) $this->paypalApiUsername_Live;
         } else {
-            return $this->paypalApiUsername_Dev;
+            return (string) $this->paypalApiUsername_Dev;
         }
     }
     
@@ -435,12 +434,12 @@ class Paypal extends PaymentMethod
      * 
      * @return string
      */
-    public function getApiPassword()
+    public function getApiPassword() : string
     {
         if ($this->mode == 'Live') {
-            return $this->paypalApiPassword_Live;
+            return (string) $this->paypalApiPassword_Live;
         } else {
-            return $this->paypalApiPassword_Dev;
+            return (string) $this->paypalApiPassword_Dev;
         }
     }
     
@@ -449,12 +448,12 @@ class Paypal extends PaymentMethod
      * 
      * @return string
      */
-    public function getApiSignature()
+    public function getApiSignature() : string
     {
         if ($this->mode == 'Live') {
-            return $this->paypalApiSignature_Live;
+            return (string) $this->paypalApiSignature_Live;
         } else {
-            return $this->paypalApiSignature_Dev;
+            return (string) $this->paypalApiSignature_Dev;
         }
     }
     
@@ -463,12 +462,12 @@ class Paypal extends PaymentMethod
      * 
      * @return string
      */
-    public function getNvpApiServerUrl()
+    public function getNvpApiServerUrl() : string
     {
         if ($this->mode == 'Live') {
-            return $this->paypalNvpApiServerUrl_Live;
+            return (string) $this->paypalNvpApiServerUrl_Live;
         } else {
-            return $this->paypalNvpApiServerUrl_Dev;
+            return (string) $this->paypalNvpApiServerUrl_Dev;
         }
     }
     
@@ -477,12 +476,12 @@ class Paypal extends PaymentMethod
      * 
      * @return string
      */
-    public function getSoapApiServerUrl()
+    public function getSoapApiServerUrl() : string
     {
         if ($this->mode == 'Live') {
-            return $this->paypalSoapApiServerUrl_Live;
+            return (string) $this->paypalSoapApiServerUrl_Live;
         } else {
-            return $this->paypalSoapApiServerUrl_Dev;
+            return (string) $this->paypalSoapApiServerUrl_Dev;
         }
     }
     
@@ -491,12 +490,12 @@ class Paypal extends PaymentMethod
      * 
      * @return string
      */
-    public function getApiVersion()
+    public function getApiVersion() : string
     {
         if ($this->mode == 'Live') {
-            return $this->paypalApiVersion_Live;
+            return (string) $this->paypalApiVersion_Live;
         } else {
-            return $this->paypalApiVersion_Dev;
+            return (string) $this->paypalApiVersion_Dev;
         }
     }
     
@@ -505,7 +504,7 @@ class Paypal extends PaymentMethod
      * 
      * @return string
      */
-    public function getIPNTargetURL()
+    public function getIPNTargetURL() : string
     {
         $url = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
         if ($this->mode == 'Live') {
@@ -520,7 +519,7 @@ class Paypal extends PaymentMethod
      * 
      * @return array
      */
-    public function getIPNRequestVariables()
+    public function getIPNRequestVariables() : array
     {
         $variables  = [];
         $ipnKeysMap = [
@@ -575,7 +574,7 @@ class Paypal extends PaymentMethod
      * 
      * @return array
      */
-    public function getIPNCustomVariables()
+    public function getIPNCustomVariables() : array
     {
         $variables = [];
 
@@ -599,7 +598,7 @@ class Paypal extends PaymentMethod
      * 
      * @return string
      */
-    public function getPayerID()
+    public function getPayerID() : string
     {
         $payerID = '';
         if (isset($_REQUEST['payer_id'])) {
@@ -609,7 +608,7 @@ class Paypal extends PaymentMethod
         } else {
             $payerID = Tools::Session()->get(self::PAYERID_SESSION_KEY);
         }
-        return $payerID;
+        return (string) $payerID;
     }
 
     /**
@@ -617,9 +616,9 @@ class Paypal extends PaymentMethod
      *
      * @return string
      */
-    public function getPaypalToken()
+    public function getPaypalToken() : string
     {
-        return Tools::Session()->get(self::TOKEN_SESSION_KEY);
+        return (string) Tools::Session()->get(self::TOKEN_SESSION_KEY);
     }
 
     /***********************************************************************************************
@@ -647,12 +646,12 @@ class Paypal extends PaymentMethod
      * 
      * @param array $checkoutData Checkout data
      * 
-     * @return void
+     * @return bool
      *
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function canProcessBeforePaymentProvider(array $checkoutData)
+    public function canProcessBeforePaymentProvider(array $checkoutData) : bool
     {
         return !$this->beforePaymentProviderIsProcessed();
     }
@@ -662,12 +661,12 @@ class Paypal extends PaymentMethod
      * 
      * @param array $checkoutData Checkout data
      * 
-     * @return void
+     * @return bool
      *
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function canProcessAfterPaymentProvider(array $checkoutData)
+    public function canProcessAfterPaymentProvider(array $checkoutData) : bool
     {
         $can     = false;
         $request = $this->getController()->getRequest();
@@ -687,12 +686,12 @@ class Paypal extends PaymentMethod
      * 
      * @param array $checkoutData Checkout data
      * 
-     * @return void
+     * @return bool
      *
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function canPlaceOrder(array $checkoutData)
+    public function canPlaceOrder(array $checkoutData) : bool
     {
         return $this->beforePaymentProviderIsProcessed() && $this->afterPaymentProviderIsProcessed();
     }
@@ -702,12 +701,12 @@ class Paypal extends PaymentMethod
      * 
      * @param array $checkoutData Checkout data
      * 
-     * @return void
+     * @return bool
      *
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function canProcessAfterOrder(Order $order, array $checkoutData)
+    public function canProcessAfterOrder(Order $order, array $checkoutData) : bool
     {
         return $this->canPlaceOrder($checkoutData) && $order instanceof Order;// && $order->exists();
     }
@@ -725,7 +724,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function processBeforePaymentProvider(array $checkoutData)
+    protected function processBeforePaymentProvider(array $checkoutData) : void
     {
         $token = $this->fetchPaypalToken($checkoutData);
        
@@ -759,7 +758,7 @@ class Paypal extends PaymentMethod
      *         Sascha Koehler <skoehler@pixeltricks.de>
      * @since 09.04.2014
      */
-    public function processAfterPaymentProvider(array $checkoutData)
+    public function processAfterPaymentProvider(array $checkoutData) : void
     {
         $request = $this->getController()->getRequest();
         $token   = $request->getVar('token');
@@ -794,7 +793,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 25.04.2018
      */
-    protected function processAfterOrder(Order $order, array $checkoutData)
+    protected function processAfterOrder(Order $order, array $checkoutData) : void
     {
         $this->doExpressCheckoutPayment($order);
         $this->clearSession();
@@ -810,7 +809,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function processNotification(HTTPRequest $request)
+    protected function processNotification(HTTPRequest $request) : void
     {
         if ($this->validateSharedSecret($request) === false) {
             $this->Log('processNotification', '');
@@ -870,7 +869,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 10.10.2018
      */
-    public function resetProgress()
+    public function resetProgress() : void
     {
         Tools::Session()->set(self::BEFORE_PAYMENT_PROVIDER_IS_PROCESSED_SESSION_KEY, false);
         Tools::Session()->set(self::AFTER_PAYMENT_PROVIDER_IS_PROCESSED_SESSION_KEY, false);
@@ -893,7 +892,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 25.04.2018
      */
-    public function clearSession()
+    public function clearSession() : void
     {
         Tools::Session()->set(self::SESSION_KEY, null);
         Tools::saveSession();
@@ -904,9 +903,9 @@ class Paypal extends PaymentMethod
      * 
      * @return bool
      */
-    protected function beforePaymentProviderIsProcessed()
+    protected function beforePaymentProviderIsProcessed() : bool
     {
-        return Tools::Session()->get(self::BEFORE_PAYMENT_PROVIDER_IS_PROCESSED_SESSION_KEY);
+        return (bool) Tools::Session()->get(self::BEFORE_PAYMENT_PROVIDER_IS_PROCESSED_SESSION_KEY);
     }
     
     /**
@@ -914,9 +913,9 @@ class Paypal extends PaymentMethod
      * 
      * @return bool
      */
-    protected function afterPaymentProviderIsProcessed()
+    protected function afterPaymentProviderIsProcessed() : bool
     {
-        return Tools::Session()->get(self::AFTER_PAYMENT_PROVIDER_IS_PROCESSED_SESSION_KEY);
+        return (bool) Tools::Session()->get(self::AFTER_PAYMENT_PROVIDER_IS_PROCESSED_SESSION_KEY);
     }
 
     /**
@@ -973,7 +972,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function initPaypalTokenParameters(array $checkoutData)
+    protected function initPaypalTokenParameters(array $checkoutData) : array
     {
         $shippingAddress = $this->getShippingAddress();
         $shoppingCart    = $this->getShoppingCart();
@@ -1029,7 +1028,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function addPositionParameters($shoppingCart, &$parameters, &$positionIndex)
+    protected function addPositionParameters($shoppingCart, &$parameters, &$positionIndex) : void
     {
         foreach ($shoppingCart->getTaxableShoppingcartPositions() as $position) {
             /* @var $position \SilverCart\Model\Order\ShoppingCartPosition */
@@ -1064,7 +1063,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function addChargesAndDiscountsForProductsParameters($shoppingCart, &$parameters, &$positionIndex)
+    protected function addChargesAndDiscountsForProductsParameters($shoppingCart, &$parameters, &$positionIndex) : void
     {
         if ($shoppingCart->HasChargesAndDiscountsForProducts()) {
             $position = $shoppingCart->ChargesAndDiscountsForProducts();
@@ -1088,7 +1087,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function addChargesAndDiscountsForTotalParameters($shoppingCart, &$parameters, &$positionIndex)
+    protected function addChargesAndDiscountsForTotalParameters($shoppingCart, &$parameters, &$positionIndex) : void
     {
         if ($shoppingCart->HasChargesAndDiscountsForTotal()) {
             $position = $shoppingCart->ChargesAndDiscountsForTotal();
@@ -1118,7 +1117,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    protected function addTaxAmountParameters($shoppingCart, &$parameters)
+    protected function addTaxAmountParameters($shoppingCart, &$parameters) : void
     {
         if (!Customer::currentUser()->showPricesGross()) {
             // Add taxes as a special position when the current order is displayed in net price mode.
@@ -1140,12 +1139,12 @@ class Paypal extends PaymentMethod
      * 
      * @param HTTPRequest $request Request data
      * 
-     * @return boolean
+     * @return bool
      *
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 24.04.2018
      */
-    public function validateSharedSecret(HTTPRequest $request)
+    public function validateSharedSecret(HTTPRequest $request) : bool
     {
         $secretIsValid    = false;
         $sentSharedSecret = $request->getVar($this->sharedSecretVariableName);
@@ -1182,7 +1181,7 @@ class Paypal extends PaymentMethod
      * @author Sebastian Diel <sdiel@pixeltricks.de>
      * @since 05.09.2018
      */
-    public function isValidPaypalIPNCall(HTTPRequest $request)
+    public function isValidPaypalIPNCall(HTTPRequest $request) : bool
     {
         $requestIsFromPaypal = false;
         $req                 = 'cmd=_notify-validate';
@@ -1195,7 +1194,7 @@ class Paypal extends PaymentMethod
             } else {
                 $value = urlencode($value);
             }
-            $req .= "&$key=$value";
+            $req .= "&{$key}={$value}";
         }
         
         $ch = curl_init($url);
