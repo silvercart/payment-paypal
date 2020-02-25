@@ -1,6 +1,6 @@
 {
 	"name": "silvercart/payment-paypal",
-	"type": "silverstripe-module",
+	"type": "silverstripe-vendormodule",
 	"description": "Paypaly payment module for the SilverCart ecommerce module for SilverStripe",
 	"homepage": "http://www.silvercart.org",
 	"license": "LGPL-3.0",
